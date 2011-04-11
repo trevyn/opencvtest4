@@ -29,7 +29,6 @@ int main( int argc, char** argv )
 	
     IplImage* movingAverage = cvCreateImage( imgSize, IPL_DEPTH_32F, 3); 
     IplImage* difference    = cvCreateImage( imgSize, IPL_DEPTH_8U, 3); 
-    IplImage* temp          = cvCreateImage( imgSize, IPL_DEPTH_8U, 3); 
 	
     cvNamedWindow( "Image", 1 ); 
     cvNamedWindow( "ref", 1 ); 
@@ -40,7 +39,6 @@ int main( int argc, char** argv )
     cvNamedWindow( "Source", 1 ); 
 	
     int key=-1; 
-    int flag=0; 
 	
 	cvCopyImage(cvQueryFrame(capture), colourImage); 
 	cvCvtColor(colourImage,greyImage,CV_BGR2GRAY); 
@@ -76,113 +74,60 @@ int main( int argc, char** argv )
 //		printf( "%g ms: out of waitkey.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
 
 		
-		if (1) {
-			int i, j, k;
-			uchar 	*grey_data = ( uchar* ) greyImage->imageData;
-			uchar 	*testout_data = ( uchar* ) testOutImage->imageData;
-			unsigned long acc;
-			
-			for( i = 0, k = 0 ; i < greyImage->height ; i++ ) {
-				acc= 0;
-				for( j = 0 ; j < greyImage->width ; j++, k++ ) {
-					acc+= grey_data[i * greyImage->widthStep + j];
-				}
-				for( j = 0 ; j < 1 ; j++, k++ ) {
-					testout_data[i * testOutImage->widthStep + j]= acc/greyImage->width;
-				}
-				
+		int i, j, k;
+		uchar 	*grey_data = ( uchar* ) greyImage->imageData;
+		uchar 	*testout_data = ( uchar* ) testOutImage->imageData;
+		unsigned long acc;
+		
+		for( i = 0, k = 0 ; i < greyImage->height ; i++ ) {
+			acc= 0;
+			for( j = 0 ; j < greyImage->width ; j++, k++ ) {
+				acc+= grey_data[i * greyImage->widthStep + j];
+			}
+			for( j = 0 ; j < 1 ; j++, k++ ) {
+				testout_data[i * testOutImage->widthStep + j]= acc/greyImage->width;
 			}
 			
+		}
+		
 //			cvShowImage("testout",testOutImage); 
 
+		
+		for( j = 0 ; j < greyImage->width ; j++) {
+			acc= 0;
+			for( i = 0; i < greyImage->height ; i++ ) {
+				acc+= grey_data[i * greyImage->widthStep + j];
+			}
 			
-			for( j = 0 ; j < greyImage->width ; j++) {
-				acc= 0;
-				for( i = 0; i < greyImage->height ; i++ ) {
-					acc+= grey_data[i * greyImage->widthStep + j];
-				}
-				
-				for( i = 0; i < 1 ; i++ ) {
+			for( i = 0; i < 1 ; i++ ) {
 //					testout_data[i * testOutImage->widthStep + j]= acc/greyImage->width;
 //					double multiplier1 = 0.5 * (1 - cos(2*3.14159*i/(greyImage->height-1)));
-					double multiplier2 = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));
-					testout_data[i * testOutImage->widthStep + j]=  multiplier2 * (acc/greyImage->height);
-				
-				}
-				
+				double multiplier2 = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));
+				testout_data[i * testOutImage->widthStep + j]=  multiplier2 * (acc/greyImage->height);
+			
 			}
+			
+		}
 //			cvShowImage("testout2",testOutImage); 
 
 //			printf( "%g ms: linear projections and hann window completed.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
 
+		
+		if(key == 'r') {
+			cvReleaseImage(&ref);
+			ref= cvCloneImage(testOutImage);
+			cvShowImage("ref",ref); 
+		}
+		
+		
+		
+		{  // try phase correlating full img
 			
-			if(key == 'r') {
-				cvReleaseImage(&ref);
-				ref= cvCloneImage(testOutImage);
-				cvShowImage("ref",ref); 
-			}
-			
-			
-			
-			{  // try phase correlating full img
-				
-				tpl= cvCloneImage(testOutImage);
-				//				ref= cvCloneImage(testOutImage);
+			tpl= cvCloneImage(testOutImage);
+			//				ref= cvCloneImage(testOutImage);
 //				cvShowImage("tpl",tpl); 
 //				cvShowImage("ref",ref); 
-				
-				
-				if(ref == 0)
-					continue;
-				
-				if( ( tpl->width != ref->width ) || ( tpl->height != ref->height ) ) {
-					fprintf( stderr, "Both images must have equal width and height!\n" );
-					continue
-					;
-				}
-				
-				/* create a new image, to store phase correlation result */
-				
-				/* get phase correlation of input images */
-				
-//				printf( "%g ms: phase correlation set up.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
-				
-				phase_correlation( ref, tpl, poc );
-				
-//				printf( "%g ms: phase correlation completed.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
-				
-				/* find the maximum value and its location */
-				CvPoint minloc, maxloc;
-				double  minval, maxval;
-				cvMinMaxLoc( poc, &minval, &maxval, &minloc, &maxloc, 0 );
-				
-				/* print it */
-				printf( "Maxval at (%d, %d) = %2.4f\n", maxloc.x, maxloc.y, maxval );
-				
-				cvCvtScale(poc, pocdisp, 1.0/(maxval/2), 0);
-				
-				cvShowImage("poc",pocdisp);
-				
-				cvReleaseImage(&tpl);
-				
-//				printf( "%g ms: max found and poc scale converted.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
-				
-			}
-
-//			cvReleaseImage(&ref);
-//			ref= cvCloneImage(testOutImage);
-
-//			printf( "%g ms: done.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
 			
-			
-		}
-		else if (0){
-			tpl= cvCloneImage(greyImage);
-			cvShowImage("tpl",tpl); 
-
 			
 			if(ref == 0)
 				continue;
@@ -194,11 +139,16 @@ int main( int argc, char** argv )
 			}
 			
 			/* create a new image, to store phase correlation result */
-			poc = cvCreateImage( cvSize( tpl->width, tpl->height ), IPL_DEPTH_64F, 1 );
 			
 			/* get phase correlation of input images */
+			
+//				printf( "%g ms: phase correlation set up.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
 
+			
 			phase_correlation( ref, tpl, poc );
+			
+//				printf( "%g ms: phase correlation completed.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
+
 			
 			/* find the maximum value and its location */
 			CvPoint minloc, maxloc;
@@ -206,11 +156,25 @@ int main( int argc, char** argv )
 			cvMinMaxLoc( poc, &minval, &maxval, &minloc, &maxloc, 0 );
 			
 			/* print it */
-			fprintf( stdout, "Maxval at (%d, %d) = %2.4f\n", maxloc.x, maxloc.y, maxval );
+			printf( "Maxval at (%d, %d) = %2.4f\n", maxloc.x, maxloc.y, maxval );
 			
-			cvShowImage("poc",poc); 
+			cvCvtScale(poc, pocdisp, 1.0/(maxval/2), 0);
+			
+			cvShowImage("poc",pocdisp);
+			
+			cvReleaseImage(&tpl);
+			
+//				printf( "%g ms: max found and poc scale converted.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
+
+			
 		}
-		
+
+//			cvReleaseImage(&ref);
+//			ref= cvCloneImage(testOutImage);
+
+//			printf( "%g ms: done.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
+			
+
 	} 
 	
 	
@@ -227,8 +191,6 @@ void phase_correlation( IplImage *ref, IplImage *tpl, IplImage *poc )
 {
 	int 	i, j, k;
 	double	tmp;
-	double t = (double)cvGetTickCount();
-//	printf( "%g ms: start.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
 	
 	/* get image properties */
 	int width  	 = ref->width;
@@ -245,15 +207,11 @@ void phase_correlation( IplImage *ref, IplImage *tpl, IplImage *poc )
 	fftw_complex *img1 = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * width * height );
 	fftw_complex *img2 = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * width * height );
 	fftw_complex *res  = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * width * height );	
-	
-//	printf( "%g ms: allocated.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
-	
+		
 	/* setup FFTW plans */
 	fftw_plan fft_img1 = fftw_plan_dft_2d( height , width, img1, img1, FFTW_FORWARD,  FFTW_ESTIMATE );
 	fftw_plan fft_img2 = fftw_plan_dft_2d( height , width, img2, img2, FFTW_FORWARD,  FFTW_ESTIMATE );
 	fftw_plan ifft_res = fftw_plan_dft_2d( height , width, res,  res,  FFTW_BACKWARD, FFTW_ESTIMATE );
-//	printf( "%g ms: plans set up.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
 	
 	/* load images' data to FFTW input */
 	for( i = 0, k = 0 ; i < height ; i++ ) {
@@ -266,27 +224,11 @@ void phase_correlation( IplImage *ref, IplImage *tpl, IplImage *poc )
 		}
 	}
 	
-//	printf( "%g ms: data loaded.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
-	
 	/* obtain the FFT of img1 */
 	fftw_execute( fft_img1 );
-	
-	
-	
-	
-	
+		
 	/* obtain the FFT of img2 */
 	fftw_execute( fft_img2 );
-	
-//	for( i = 0 ; i < fft_size ; i++ ) {
-//		poc_data[i] = img2[i][1];
-//	}
-	
-	
-	
-//	printf( "%g ms: 2x forward ffts done.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
 	
 	/* obtain the cross power spectrum */
 	for( i = 0; i < fft_size ; i++ ) {
@@ -312,17 +254,10 @@ void phase_correlation( IplImage *ref, IplImage *tpl, IplImage *poc )
 			res[i][1] /= tmp;
 		}
 		
-		
 	}
-	
-//	printf( "%g ms: cross power calculated.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
 	
 	/* obtain the phase correlation array */
 	fftw_execute(ifft_res);
-	
-//	printf( "%g ms: reverse fft done.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
 	
 	/* normalize and copy to result image */
 	for( i = 0 ; i < fft_size ; i++ ) {
@@ -332,10 +267,7 @@ void phase_correlation( IplImage *ref, IplImage *tpl, IplImage *poc )
 //	pocline++;
 	if(pocline==479)
 		pocline= 0;
-	
-//	printf( "%g ms: normalized.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
-	
+		
 	/* deallocate FFTW arrays and plans */
 	fftw_destroy_plan( fft_img1 );
 	fftw_destroy_plan( fft_img2 );
@@ -343,7 +275,4 @@ void phase_correlation( IplImage *ref, IplImage *tpl, IplImage *poc )
 	fftw_free( img1 );
 	fftw_free( img2 );
 	fftw_free( res );
-	
-//	printf( "%g ms: deallocated and done.\n", (cvGetTickCount() - t)/((double)cvGetTickFrequency()*1000.));
-
 }
