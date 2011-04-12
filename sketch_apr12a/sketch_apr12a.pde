@@ -1,37 +1,28 @@
 #include <stdlib.h>
-#include <PinChangeInt.h>
-#include <PinChangeIntConfig.h>
-
-
-#define encoder0PinA  21
-#define encoder0PinB  52
 
 volatile long encoder0Pos = 0;
-
+volatile long encoder1Pos = 0;
+volatile char lasta0;
+volatile char lasta1;
 
 void setup() {
   
-  // setup encoder inputs and interrupt handler
-  
-  pinMode(encoder0PinA, INPUT); 
-  digitalWrite(encoder0PinA, HIGH);       // turn on pullup resistor
-  pinMode(encoder0PinB, INPUT); 
-  digitalWrite(encoder0PinB, HIGH);       // turn on pullup resistor
+  // set up pins
+  // for arduino mega port/pin assignments, see: http://farm4.static.flickr.com/3321/3495394293_0d2c81798c_b.jpg
+  // we're using:
+  // portc, lowest 6 bits for motor control outputs
+  // portl, lowest 4 bits for encoder inputs
+ 
+    DDRL = B00000000;  // set port l as inputs
+    PORTL= B11111111;  // turn on all pullup resistors
 
-//  PCattachInterrupt(21, doEncoder, CHANGE);  // encoder pin on interrupt 2 - pin 21
+    DDRC = B11111111;  // set port c as outputs
+    PORTC= B00000000;  // all stop
 
-//  attachInterrupt(2, doEncoder, CHANGE);  // encoder pin on interrupt 2 - pin 21
-
-  // setup output pins
+   // set up serial
   
-  PORTC= B00000000;
-  DDRC = B11111111;  // set as outputs
-  PORTC= B00000000;
-  
-  // setup serial
-  
-  Serial.begin(115200);
-  Serial.println("start");                // a personal quirk
+    Serial.begin(115200);
+    Serial.println("start");
 
 //  Serial.println(digitalPinToPort(21), DEC);
 //  Serial.println(digitalPinToBitMask(21), DEC);
@@ -76,13 +67,13 @@ void loop() {
 
  //        delay(3000);
   
-  char lastd;
-  char driveByte= 0;
+   char driveByte= 0;
     PORTC= B00000000;  // force stop
   
  loop1:
     
    while(Serial.available() < 1){ // any key
+    encoderDelayMs(5);  // read encoder!
   }
 
  
@@ -94,134 +85,60 @@ void loop() {
 
 
       switch(incomingByte) {
-        case 'i':
+        case 'y':
           driveByte= B11000000;
          break;
-        case 'k':
+        case 'h':
           driveByte= B01000000;
         break;
-        case 'j':
-            PORTC= B00110000;
+       case 'i':
+          driveByte= B00110000;
+         break;
+        case 'k':
+          driveByte= B00010000;
         break;
+       case 'j':
+          driveByte= B00001100;
+         break;
         case 'l':
-            PORTC= B00010000;
+          driveByte= B00000100;
         break;
-        case '0':  // home ;)
-          if(encoder0Pos > 0) {  // go down
-              PORTC= B00010000;
-            do{
-             char d= PIND & B00000001;  // pin 21
-             if(lastd != d) {
-               char b= (PINB & B00000010)>>1;  // pin 50
-               if (d==b)
-                   encoder0Pos--;
-               else
-                  encoder0Pos++;
-               lastd= d;
-             }
-            }while(encoder0Pos > 0);
-          }
-          else if(encoder0Pos < 0) {  // go up
-              PORTC= B00110000;
-            do{
-              char d= PIND & B00000001;  // pin 21
-             if(lastd != d) {
-               char b= (PINB & B00000010)>>1;  // pin 50
-               if (d==b)
-                   encoder0Pos--;
-               else
-                  encoder0Pos++;
-               lastd= d;
-             }
-            }while(encoder0Pos < 0);
-          }
-          
-          
-          PORTC= B00000000;
-        break;
-      }
+       }
 
       // run: 1ms on, 5ms off x30
       
-      for(int x= 0; x < 60; x++) {
-        unsigned long stopMillis;
+      for(int x= 0; x < 2; x++) {
         
-        stopMillis= millis()+1;
-        PORTC= driveByte;
-        do {
-        } while(millis() < stopMillis);
-
-        stopMillis= millis()+30;
-        PORTC= B00000000;  // stop
-        do {
-        } while(millis() < stopMillis);
-
+         PORTC= driveByte;
+          encoderDelayMs(20);
+  
+         PORTC= B00000000;  // stop
+ //          encoderDelayMs(10);        
       }
 
-
-/*      unsigned long stopMillis= millis()+10;
-
-      do {
-         char d= PIND & B00000001;  // pin 21
-         if(lastd != d) {
-           char b= (PINB & B00000010)>>1;  // pin 50
-           if (d==b)
-               encoder0Pos--;
-           else
-              encoder0Pos++;
-           lastd= d;
-         }
-      } while(millis() < stopMillis);
-
-       // stop and wait for settle
-
-       PORTC= B00000000;  // stop
-
-
-     stopMillis= millis()+15;
-
-      do {
-         char d= PIND & B00000001;  // pin 21
-         if(lastd != d) {
-           char b= (PINB & B00000010)>>1;  // pin 50
-           if (d==b)
-               encoder0Pos--;
-           else
-              encoder0Pos++;
-           lastd= d;
-         }
-      } while(millis() < stopMillis);
-     
-     
-///     sei();
-     
-      
-       Serial.println (encoder0Pos, DEC);  // print encoder position
-//     delay(10);  // wait 5ms for position to settle
-//      Serial.println (encoder0Pos, DEC);  // print encoder position
-*/
+///     sei();      
+//       Serial.println (encoder0Pos, DEC);  // print encoder position
           
   goto loop1;
 }
 
-void doEncoder() {
-//  encoder0Pos++;
-  /* If pinA and pinB are both high or both low, it is spinning
-   * forward. If they're different, it's going backward.
-   *
-   * For more information on speeding up this process, see
-   * [Reference/PortManipulation], specifically the PIND register.
-   */
-   char d= PIND & B00000001;  // pin 21
-   char b= (PINB & B00000010)>>1;  // pin 50
-   
-   
-//  if (digitalRead(encoder0PinA) == digitalRead(encoder0PinB)) {
-  if (d==b) {
-    encoder0Pos--;
-  } else {
-    encoder0Pos++;
-  }
 
-}
+void encoderDelayMs(unsigned long delayMs) {
+  
+  unsigned long stopMs= millis()+delayMs;
+
+  do{
+    char a0= PIND & B00000001;  // pin 21
+    if(a0 != lasta0) {
+     char b0= (PINB & B00000010)>>1;  // pin 50
+     if (a0==b0)
+         encoder0Pos--;
+     else
+        encoder0Pos++;
+     lasta0= a0;
+   }
+  }while(millis() < stopMs);
+ // }while(encoder0Pos > 0);
+ }
+
 
