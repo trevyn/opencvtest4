@@ -1,9 +1,20 @@
 #include <stdlib.h>
+#include <stdarg.h>
 
 volatile long encoder0Pos = 0;
 volatile long encoder1Pos = 0;
 volatile char lasta0;
 volatile char lasta1;
+
+void p(char *fmt, ... ){
+        char tmp[256];
+        va_list args;
+        va_start (args, fmt );
+        vsnprintf(tmp, 256, fmt, args);
+        va_end (args);
+        Serial.print(tmp);
+}
+
 
 void setup() {
   
@@ -69,23 +80,33 @@ void loop() {
   
    char driveByte= 0;
     PORTC= B00000000;  // force stop
+
+  unsigned char cmdLen= 0;
+  char cmdBuf[256];
   
  loop1:
     
    while(Serial.available() < 1){ // any key
     encoderDelayMs(5);  // read encoder!
   }
-
- 
+  
       char incomingByte = Serial.read();
+      cmdBuf[cmdLen++]= incomingByte;
+      cmdBuf[cmdLen]= 0;
+  
+      if (cmdBuf[cmdLen-1] == 'x') {
+        p("got command: %s\n", cmdBuf);
+         cmdLen= 0;
+      }   
+      
        Serial.print("got keypress: ");
        Serial.println(incomingByte);
 
-//  cli();  // disable interrupts
+//  -- bad idea because i think this kills millis()
 
 
       switch(incomingByte) {
-        case 'y':
+/*        case 'y':
           driveByte= B11000000;
          break;
         case 'h':
@@ -102,25 +123,137 @@ void loop() {
          break;
         case 'l':
           driveByte= B00000100;
-        break;
+        break;*/
        }
 
-      // run: 1ms on, 5ms off x30
+      // run
+
+        p("pos start: %ld, %ld\n", encoder0Pos, encoder1Pos);
+
       
-      for(int x= 0; x < 2; x++) {
+//      for(int x= 0; x < 1; x++) {
         
-         PORTC= driveByte;
-          encoderDelayMs(20);
+//         PORTC= driveByte;
+         encoder1MoveTo(5);
   
          PORTC= B00000000;  // stop
- //          encoderDelayMs(10);        
-      }
-
-///     sei();      
+//      }
 //       Serial.println (encoder0Pos, DEC);  // print encoder position
+//jj
+//Serial.println (encoder1Pos, DEC);  // print encoder position
+
+        p("pos end: %ld, %ld\n", encoder0Pos, encoder1Pos);
+
+///     
           
   goto loop1;
 }
+
+void encoder1MoveTo(long encoder1Target) {
+
+
+  char driveByte;
+  
+  
+  if(encoder1Target == encoder1Pos)
+    return;
+
+  char comingFromBelow= (encoder1Target > encoder1Pos);
+  
+  if( (encoder1Target > encoder1Pos))
+    driveByte= B00000100;
+  else
+    driveByte= B00001100;
+      
+cli();  // disable interrupts
+  
+unsigned long tickCount, driveTickCount;
+
+  char a1,b1,lasta1;
+
+  PORTC= driveByte;
+
+  for(driveTickCount= 0; driveTickCount < 10000; driveTickCount++) {
+ 
+   // read encoder 0
+ 
+    char a0= PINL & B00000001;  // pin 21
+    if(a0 != lasta0) {
+     char b0= (PINL & B00000010)>>1;  // pin 50
+     if (a0==b0)
+        encoder0Pos--;
+     else
+        encoder0Pos++;
+     lasta0= a0;
+    }
+
+  // read encoder 1
+
+    a1= (PINL & B00000100)>>2;  // pin 21
+    if(a1 != lasta1) {
+     b1= (PINL & B00001000)>>3;  // pin 50
+     if (a1==b1)
+        encoder1Pos--;
+     else
+        encoder1Pos++;
+     lasta1= a1;
+   }
+   
+   if(comingFromBelow) {
+     if(encoder1Pos >= encoder1Target)
+       break;
+   }
+   else {
+     if(encoder1Pos <= encoder1Target)
+       break;
+   }
+      
+  }
+  
+  // stop, allow to settle & re-read
+  
+  PORTC= B00000000;
+
+  unsigned long lastMoveTick= 0;
+
+  for(tickCount= 0; tickCount < 30000; tickCount++) {
+ 
+   // read encoder 0
+ 
+    char a0= PINL & B00000001;  // pin 21
+    if(a0 != lasta0) {
+     char b0= (PINL & B00000010)>>1;  // pin 50
+     if (a0==b0)
+        encoder0Pos--;
+     else
+        encoder0Pos++;
+     lasta0= a0;
+     lastMoveTick= tickCount;
+    }
+
+  // read encoder 1
+
+    char a1= (PINL & B00000100)>>2;  // pin 21
+    if(a1 != lasta1) {
+     char b1= (PINL & B00001000)>>3;  // pin 50
+     if (a1==b1)
+        encoder1Pos--;
+     else
+        encoder1Pos++;
+     lasta1= a1;
+     lastMoveTick= tickCount;
+   }
+      
+  }
+  
+  
+ // }while(encoder0Pos > 0);
+
+sei();      // re-enable interrupts
+       p("drivebyte: %d, drive for %ld ticks, %ld ticks to settle (waited 30k)\n", driveByte, driveTickCount, lastMoveTick);  // print encoder position
+
+}
+
 
 
 void encoderDelayMs(unsigned long delayMs) {
@@ -128,15 +261,31 @@ void encoderDelayMs(unsigned long delayMs) {
   unsigned long stopMs= millis()+delayMs;
 
   do{
-    char a0= PIND & B00000001;  // pin 21
+ 
+   // read encoder 0
+ 
+/*    char a0= PINL & B00000001;  // pin 21
     if(a0 != lasta0) {
-     char b0= (PINB & B00000010)>>1;  // pin 50
+     char b0= (PINL & B00000010)>>1;  // pin 50
      if (a0==b0)
-         encoder0Pos--;
+        encoder0Pos--;
      else
         encoder0Pos++;
      lasta0= a0;
+    }*/
+
+  // read encoder 1
+
+    char a1= (PINL & B00000100)>>2;  // pin 21
+    if(a1 != lasta1) {
+     char b1= (PINL & B00001000)>>3;  // pin 50
+     if (a1==b1)
+        encoder1Pos--;
+     else
+        encoder1Pos++;
+     lasta1= a1;
    }
+   
   }while(millis() < stopMs);
  // }while(encoder0Pos > 0);
  }
