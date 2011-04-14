@@ -21,8 +21,8 @@ void setup() {
   // set up pins
   // for arduino mega port/pin assignments, see: http://farm4.static.flickr.com/3321/3495394293_0d2c81798c_b.jpg
   // we're using:
-  // portc, lowest 6 bits for motor control outputs
-  // portl, lowest 4 bits for encoder inputs
+  // portc for motor control outputs
+  // portl for encoder inputs
  
     DDRL = B00000000;  // set port l as inputs
     PORTL= B11111111;  // turn on all pullup resistors
@@ -34,9 +34,6 @@ void setup() {
   
     Serial.begin(115200);
     Serial.println("start");
-
-//  Serial.println(digitalPinToPort(21), DEC);
-//  Serial.println(digitalPinToBitMask(21), DEC);
 
 }
 
@@ -152,7 +149,10 @@ void loop() {
 
             p("target: %ld, %ld\n", xTarget, yTarget);
             p("pos start: %ld, %ld\n", encoder0Pos, encoder1Pos);
+            cli();  // disable interrupts
             encoderMoveTo(xTarget, yTarget);
+            encoderSettle();
+            sei();  // enable interrupts
             PORTC= B00000000;  // safety stop
             p("pos end: %ld, %ld\n", encoder0Pos, encoder1Pos);
                  
@@ -176,17 +176,25 @@ void loop() {
           
             long xStart= encoder0Pos;
             long yStart= encoder1Pos;
+
+            cli();  // disable interrupts
           
-            for(int x= 0; x <= 20; x++) {
+            for(int x= 0; x <= 100; x++) {
               double pi= 3.14159;
               
-              long xFun= sin((2*pi*x)/20)*2000;
-              long yFun= cos((2*pi*x)/20)*2000;
+              long xFun= sin((2*pi*x)/100)*2000;
+              long yFun= cos((2*pi*x)/100)*2000-2000;
               
-               p("%d: %d, %d (diff: %d, %d)\n", x, xStart+xFun, yStart+yFun, xFun, yFun);
+//               p("%ld: %ld, %ld (diff: %ld, %ld)\n", x, xStart+xFun, yStart+yFun, xFun, yFun);
                
                encoderMoveTo(xStart+xFun, yStart+yFun);
             }
+
+            encoderSettle();
+            
+            sei();  // enable interrupts
+
+
           break;
 
         }
@@ -205,7 +213,6 @@ void encoderMoveTo(long encoder0Target, long encoder1Target) {
 
   char driveByte;
       
-cli();  // disable interrupts
   
 unsigned long tickCount, driveTickCount;
 
@@ -253,13 +260,23 @@ unsigned long tickCount, driveTickCount;
      lasta1= a1;
    }
    
-   if((encoder1Pos >= encoder1Target-200) && (encoder1Pos <= encoder1Target+200) &&
-      (encoder0Pos >= encoder0Target-200) && (encoder0Pos <= encoder0Target+200))
+   if((encoder1Pos >= encoder1Target-20) && (encoder1Pos <= encoder1Target+20) &&
+      (encoder0Pos >= encoder0Target-20) && (encoder0Pos <= encoder0Target+20))
       break;
       
   }
   
-  // stop, allow to settle & re-read
+  // stop, note still needs settling
+  
+//  PORTC= B00000000;
+
+}
+
+void encoderSettle(void) {
+  
+  unsigned long tickCount;
+  
+  // force stop, allow to settle & re-read
   
   PORTC= B00000000;
 
@@ -294,15 +311,10 @@ unsigned long tickCount, driveTickCount;
    }
       
   }
-  
-  
- // }while(encoder0Pos > 0);
+    
+  p("encoders settled at (%ld,%ld), %ld ticks to settle (waited 30k)\n", encoder0Pos, encoder1Pos, lastMoveTick);  // print encoder position
 
-sei();      // re-enable interrupts
-       p("drivebyte: %d, drive for %ld ticks, %ld ticks to settle (waited 30k)\n", driveByte, driveTickCount, lastMoveTick);  // print encoder position
-
-}
-
+}  
 
 
 void encoderDelayMs(unsigned long delayMs) {
