@@ -84,6 +84,12 @@ void loop() {
   unsigned char cmdLen= 0;
   char cmdBuf[256];
   
+  long xTarget,yTarget;
+ 
+             long cmdPos, posMultiplier;
+            long pos= 0;
+
+  
  loop1:
     
    while(Serial.available() < 1){ // any key
@@ -94,15 +100,15 @@ void loop() {
       cmdBuf[cmdLen++]= incomingByte;
       cmdBuf[cmdLen]= 0;
   
-      if (cmdBuf[cmdLen-1] == 'x') {
+      if (cmdBuf[cmdLen-1] == '\\') {
         p("got command: %s\n", cmdBuf);
         
         // act on command
         
         switch(cmdBuf[0]) {
-          case 'g':
-            int cmdPos, posMultiplier;
-            int pos= 0;
+          case 'x':
+
+            pos= 0;
           
             if(cmdBuf[1] == '-') {
                cmdPos= 2;
@@ -113,7 +119,7 @@ void loop() {
                 posMultiplier= 1;
             }
             
-            for(;cmdBuf[cmdPos] != 'x';cmdPos++) {
+            for(;cmdBuf[cmdPos] != '\\';cmdPos++) {
                if((cmdBuf[cmdPos] < '0') || (cmdBuf[cmdPos] > '9'))
                  continue;
                pos*= 10;
@@ -121,10 +127,42 @@ void loop() {
             }
             pos*= posMultiplier;
             
-            p("cmd g: %d\n", pos);
+            p("xTarget: %d\n", pos);
 
+            xTarget= pos;
+          break;
+          
+          case 'y':
+
+            pos= 0;
+          
+            if(cmdBuf[1] == '-') {
+               cmdPos= 2;
+               posMultiplier= -1;
+            }
+            else {
+                cmdPos= 1;
+                posMultiplier= 1;
+            }
+            
+            for(;cmdBuf[cmdPos] != '\\';cmdPos++) {
+               if((cmdBuf[cmdPos] < '0') || (cmdBuf[cmdPos] > '9'))
+                 continue;
+               pos*= 10;
+               pos+= cmdBuf[cmdPos]-'0';
+            }
+            pos*= posMultiplier;
+            
+            p("yTarget: %d\n", pos);
+
+            yTarget= pos;
+          break;
+
+          case 'g':
+
+            p("target: %ld, %ld\n", xTarget, yTarget);
             p("pos start: %ld, %ld\n", encoder0Pos, encoder1Pos);
-            encoder1MoveTo(pos);
+            encoderMoveTo(xTarget, yTarget);
             PORTC= B00000000;  // safety stop
             p("pos end: %ld, %ld\n", encoder0Pos, encoder1Pos);
                  
@@ -163,21 +201,10 @@ void loop() {
   goto loop1;
 }
 
-void encoder1MoveTo(long encoder1Target) {
+void encoderMoveTo(long encoder0Target, long encoder1Target) {
 
 
   char driveByte;
-  
-  
-  if(encoder1Target == encoder1Pos)
-    return;
-
-  char comingFromBelow= (encoder1Target > encoder1Pos);
-  
-  if( (encoder1Target > encoder1Pos))
-    driveByte= B00000100;
-  else
-    driveByte= B00001100;
       
 cli();  // disable interrupts
   
@@ -185,10 +212,24 @@ unsigned long tickCount, driveTickCount;
 
   char a1,b1;
 
-  PORTC= driveByte;
 
   for(driveTickCount= 0; driveTickCount < 100000; driveTickCount++) {
  
+      driveByte= 0;
+  
+    if(encoder1Target > encoder1Pos)
+      driveByte|= B00000100;
+    else if(encoder1Target < encoder1Pos)
+      driveByte|= B00001100;
+  
+    if(encoder0Target > encoder0Pos)
+      driveByte|= B00110000;
+    else if(encoder0Target < encoder0Pos)
+      driveByte|= B00010000;
+
+    PORTC= driveByte;
+    
+    
    // read encoder 0
  
     char a0= PINL & B00000001;  // pin 21
@@ -213,14 +254,9 @@ unsigned long tickCount, driveTickCount;
      lasta1= a1;
    }
    
-   if(comingFromBelow) {
-     if(encoder1Pos >= encoder1Target)
-       break;
-   }
-   else {
-     if(encoder1Pos <= encoder1Target)
-       break;
-   }
+   if((encoder1Pos >= encoder1Target-200) && (encoder1Pos <= encoder1Target+200) &&
+      (encoder0Pos >= encoder0Target-200) && (encoder0Pos <= encoder0Target+200))
+      break;
       
   }
   
