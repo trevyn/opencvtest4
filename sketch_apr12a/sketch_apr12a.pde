@@ -96,13 +96,46 @@ void loop() {
   
       if (cmdBuf[cmdLen-1] == 'x') {
         p("got command: %s\n", cmdBuf);
-         cmdLen= 0;
+        
+        // act on command
+        
+        switch(cmdBuf[0]) {
+          case 'g':
+            int cmdPos, posMultiplier;
+            int pos= 0;
+          
+            if(cmdBuf[1] == '-') {
+               cmdPos= 2;
+               posMultiplier= -1;
+            }
+            else {
+                cmdPos= 1;
+                posMultiplier= 1;
+            }
+            
+            for(;cmdBuf[cmdPos] != 'x';cmdPos++) {
+               if((cmdBuf[cmdPos] < '0') || (cmdBuf[cmdPos] > '9'))
+                 continue;
+               pos*= 10;
+               pos+= cmdBuf[cmdPos]-'0';
+            }
+            pos*= posMultiplier;
+            
+            p("cmd g: %d\n", pos);
+
+            p("pos start: %ld, %ld\n", encoder0Pos, encoder1Pos);
+            encoder1MoveTo(pos);
+            PORTC= B00000000;  // safety stop
+            p("pos end: %ld, %ld\n", encoder0Pos, encoder1Pos);
+                 
+          break;
+        }
+        
+        cmdLen= 0;
       }   
       
-       Serial.print("got keypress: ");
-       Serial.println(incomingByte);
-
-//  -- bad idea because i think this kills millis()
+//       Serial.print("got keypress: ");
+//       Serial.println(incomingByte);
 
 
       switch(incomingByte) {
@@ -126,25 +159,6 @@ void loop() {
         break;*/
        }
 
-      // run
-
-        p("pos start: %ld, %ld\n", encoder0Pos, encoder1Pos);
-
-      
-//      for(int x= 0; x < 1; x++) {
-        
-//         PORTC= driveByte;
-         encoder1MoveTo(5);
-  
-         PORTC= B00000000;  // stop
-//      }
-//       Serial.println (encoder0Pos, DEC);  // print encoder position
-//jj
-//Serial.println (encoder1Pos, DEC);  // print encoder position
-
-        p("pos end: %ld, %ld\n", encoder0Pos, encoder1Pos);
-
-///     
           
   goto loop1;
 }
@@ -169,11 +183,11 @@ cli();  // disable interrupts
   
 unsigned long tickCount, driveTickCount;
 
-  char a1,b1,lasta1;
+  char a1,b1;
 
   PORTC= driveByte;
 
-  for(driveTickCount= 0; driveTickCount < 10000; driveTickCount++) {
+  for(driveTickCount= 0; driveTickCount < 100000; driveTickCount++) {
  
    // read encoder 0
  
