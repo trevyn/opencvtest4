@@ -66,17 +66,6 @@ void loop() {
    Serial.print(offMicroseconds);
    Serial.println();*/
 
-
-
-//  for(int x=0; x< 40; x++) {     
-//    PORTA= B00000011;
-//         delay(15);
-//    PORTA= B00000000;
-//         delay(5);
-//  }
-//    PORTA= B00000000;
-
- //        delay(3000);
   
    char driveByte= 0;
     PORTC= B00000000;  // force stop
@@ -84,7 +73,8 @@ void loop() {
   unsigned char cmdLen= 0;
   char cmdBuf[256];
   
-  long xTarget,yTarget;
+  long xTarget= 0;
+  long yTarget= 0;
  
              long cmdPos, posMultiplier;
             long pos= 0;
@@ -106,7 +96,7 @@ void loop() {
         // act on command
         
         switch(cmdBuf[0]) {
-          case 'x':
+          case 'x':  // set x target
 
             pos= 0;
           
@@ -132,7 +122,7 @@ void loop() {
             xTarget= pos;
           break;
           
-          case 'y':
+          case 'y':  // set y target
 
             pos= 0;
           
@@ -158,7 +148,7 @@ void loop() {
             yTarget= pos;
           break;
 
-          case 'g':
+          case 'g':  // xy go
 
             p("target: %ld, %ld\n", xTarget, yTarget);
             p("pos start: %ld, %ld\n", encoder0Pos, encoder1Pos);
@@ -167,6 +157,38 @@ void loop() {
             p("pos end: %ld, %ld\n", encoder0Pos, encoder1Pos);
                  
           break;
+          
+          case 'i':  // z up 5ms         
+            PORTC= B11000000;
+             encoderDelayMs(5);         
+            PORTC= B00000000;
+             encoderDelayMs(5);
+          break;
+
+          case 'k':  // z down 5ms         
+            PORTC= B01000000;
+             encoderDelayMs(5);         
+            PORTC= B00000000;
+             encoderDelayMs(5);
+          break;
+          
+          case 'c':  // circle!
+          
+            long xStart= encoder0Pos;
+            long yStart= encoder1Pos;
+          
+            for(int x= 0; x <= 20; x++) {
+              double pi= 3.14159;
+              
+              long xFun= sin((2*pi*x)/20)*2000;
+              long yFun= cos((2*pi*x)/20)*2000;
+              
+               p("%d: %d, %d (diff: %d, %d)\n", x, xStart+xFun, yStart+yFun, xFun, yFun);
+               
+               encoderMoveTo(xStart+xFun, yStart+yFun);
+            }
+          break;
+
         }
         
         cmdLen= 0;
@@ -174,29 +196,6 @@ void loop() {
       
 //       Serial.print("got keypress: ");
 //       Serial.println(incomingByte);
-
-
-      switch(incomingByte) {
-/*        case 'y':
-          driveByte= B11000000;
-         break;
-        case 'h':
-          driveByte= B01000000;
-        break;
-       case 'i':
-          driveByte= B00110000;
-         break;
-        case 'k':
-          driveByte= B00010000;
-        break;
-       case 'j':
-          driveByte= B00001100;
-         break;
-        case 'l':
-          driveByte= B00000100;
-        break;*/
-       }
-
           
   goto loop1;
 }
@@ -232,9 +231,9 @@ unsigned long tickCount, driveTickCount;
     
    // read encoder 0
  
-    char a0= PINL & B00000001;  // pin 21
+    char a0= PINL & B00000001;
     if(a0 != lasta0) {
-     char b0= (PINL & B00000010)>>1;  // pin 50
+     char b0= (PINL & B00000010)>>1;
      if (a0==b0)
         encoder0Pos--;
      else
@@ -244,9 +243,9 @@ unsigned long tickCount, driveTickCount;
 
   // read encoder 1
 
-    a1= (PINL & B00000100)>>2;  // pin 21
+    a1= (PINL & B00000100)>>2;
     if(a1 != lasta1) {
-     b1= (PINL & B00001000)>>3;  // pin 50
+     b1= (PINL & B00001000)>>3;
      if (a1==b1)
         encoder1Pos--;
      else
@@ -270,9 +269,9 @@ unsigned long tickCount, driveTickCount;
  
    // read encoder 0
  
-    char a0= PINL & B00000001;  // pin 21
+    char a0= PINL & B00000001;
     if(a0 != lasta0) {
-     char b0= (PINL & B00000010)>>1;  // pin 50
+     char b0= (PINL & B00000010)>>1;
      if (a0==b0)
         encoder0Pos--;
      else
@@ -283,9 +282,9 @@ unsigned long tickCount, driveTickCount;
 
   // read encoder 1
 
-    char a1= (PINL & B00000100)>>2;  // pin 21
+    char a1= (PINL & B00000100)>>2;
     if(a1 != lasta1) {
-     char b1= (PINL & B00001000)>>3;  // pin 50
+     char b1= (PINL & B00001000)>>3;
      if (a1==b1)
         encoder1Pos--;
      else
@@ -314,21 +313,21 @@ void encoderDelayMs(unsigned long delayMs) {
  
    // read encoder 0
  
-/*    char a0= PINL & B00000001;  // pin 21
+    char a0= PINL & B00000001;
     if(a0 != lasta0) {
-     char b0= (PINL & B00000010)>>1;  // pin 50
+     char b0= (PINL & B00000010)>>1;
      if (a0==b0)
         encoder0Pos--;
      else
         encoder0Pos++;
      lasta0= a0;
-    }*/
+    }
 
   // read encoder 1
 
-    char a1= (PINL & B00000100)>>2;  // pin 21
+    char a1= (PINL & B00000100)>>2;
     if(a1 != lasta1) {
-     char b1= (PINL & B00001000)>>3;  // pin 50
+     char b1= (PINL & B00001000)>>3;
      if (a1==b1)
         encoder1Pos--;
      else
@@ -337,7 +336,6 @@ void encoderDelayMs(unsigned long delayMs) {
    }
    
   }while(millis() < stopMs);
- // }while(encoder0Pos > 0);
  }
 
 
