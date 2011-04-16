@@ -18,12 +18,21 @@ int main( int argc, char** argv )
 	
 	int key= -1; 
 	
-	// set up opencv capture object
+	// set up opencv capture objects
 
     CvCapture* capture= cvCaptureFromCAM(0); 
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, 320);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, 240);
 	
+    CvCapture* capture2= cvCaptureFromCAM(1); 
+	cvSetCaptureProperty(capture2, CV_CAP_PROP_FRAME_WIDTH, 320);
+	cvSetCaptureProperty(capture2, CV_CAP_PROP_FRAME_HEIGHT, 240);
+
+    CvCapture* capture3= cvCaptureFromCAM(2); 
+	cvSetCaptureProperty(capture3, CV_CAP_PROP_FRAME_WIDTH, 320);
+	cvSetCaptureProperty(capture3, CV_CAP_PROP_FRAME_HEIGHT, 240);
+
+    
 	// allocate image storage (other createimage specifiers: IPL_DEPTH_32F, IPL_DEPTH_8U)
 	
     IplImage* colourImage  = cvCloneImage(cvQueryFrame(capture)); 
@@ -36,10 +45,14 @@ int main( int argc, char** argv )
 	
     cvNamedWindow("hannImage", 1);
     cvNamedWindow("greyImage", 1); 
+    cvNamedWindow("greyImage2", 1); 
+    cvNamedWindow("greyImage3", 1); 
     cvNamedWindow("poc", 1);
 	cvMoveWindow("greyImage", 40, 0);
 	cvMoveWindow("hannImage", 40, 270);
 	cvMoveWindow("poc", 365, 0);
+	cvMoveWindow("greyImage2", 40, 540);
+	cvMoveWindow("greyImage3", 365, 540);
 	
 	// set up storage for fftw
 	
@@ -60,6 +73,16 @@ int main( int argc, char** argv )
 		cvCopyImage(cvQueryFrame(capture), colourImage);  // cvCopy because both are allocated already!
 		cvCvtColor(colourImage,greyImage,CV_BGR2GRAY); 
 		cvShowImage("greyImage",greyImage); 
+
+        cvCopyImage(cvQueryFrame(capture2), colourImage);  // cvCopy because both are allocated already!
+		cvCvtColor(colourImage,greyImage,CV_BGR2GRAY); 
+		cvShowImage("greyImage2",greyImage); 
+
+        cvCopyImage(cvQueryFrame(capture3), colourImage);  // cvCopy because both are allocated already!
+		cvCvtColor(colourImage,greyImage,CV_BGR2GRAY); 
+		cvShowImage("greyImage3",greyImage);
+
+        
         key = cvWaitKey(3);
 
 		// project and calculate hann window
