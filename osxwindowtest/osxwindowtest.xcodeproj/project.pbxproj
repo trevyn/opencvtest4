@@ -18,6 +18,27 @@
 		F20C9FCB135AAA83004F411D /* osxwindowtestTests.h in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FCA135AAA83004F411D /* osxwindowtestTests.h */; };
 		F20C9FCD135AAA83004F411D /* osxwindowtestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */; };
 		F280F2D2135AC3FE00B9EC46 /* nestlib.c in Sources */ = {isa = PBXBuildFile; fileRef = F280F2D0135AC3FE00B9EC46 /* nestlib.c */; };
+		F280F2DC135D2E2700B9EC46 /* CVOCVController.m in Sources */ = {isa = PBXBuildFile; fileRef = F280F2D4135D2E2700B9EC46 /* CVOCVController.m */; };
+		F280F2DD135D2E2700B9EC46 /* OpenCVProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = F280F2D5135D2E2700B9EC46 /* OpenCVProcessor.m */; };
+		F280F2DE135D2E2700B9EC46 /* CVOCVView.m in Sources */ = {isa = PBXBuildFile; fileRef = F280F2D7135D2E2700B9EC46 /* CVOCVView.m */; };
+		F280F2DF135D2E2700B9EC46 /* CGImageWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F280F2DA135D2E2700B9EC46 /* CGImageWrapper.m */; };
+		F280F2F3135D310200B9EC46 /* libopencv_calib3d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2E7135D310200B9EC46 /* libopencv_calib3d.dylib */; };
+		F280F2F4135D310200B9EC46 /* libopencv_contrib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2E8135D310200B9EC46 /* libopencv_contrib.dylib */; };
+		F280F2F5135D310200B9EC46 /* libopencv_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2E9135D310200B9EC46 /* libopencv_core.dylib */; };
+		F280F2F6135D310200B9EC46 /* libopencv_features2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2EA135D310200B9EC46 /* libopencv_features2d.dylib */; };
+		F280F2F7135D310200B9EC46 /* libopencv_flann.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2EB135D310200B9EC46 /* libopencv_flann.dylib */; };
+		F280F2F8135D310200B9EC46 /* libopencv_gpu.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2EC135D310200B9EC46 /* libopencv_gpu.dylib */; };
+		F280F2F9135D310200B9EC46 /* libopencv_highgui.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2ED135D310200B9EC46 /* libopencv_highgui.dylib */; };
+		F280F2FA135D310200B9EC46 /* libopencv_imgproc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2EE135D310200B9EC46 /* libopencv_imgproc.dylib */; };
+		F280F2FB135D310200B9EC46 /* libopencv_legacy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2EF135D310200B9EC46 /* libopencv_legacy.dylib */; };
+		F280F2FC135D310200B9EC46 /* libopencv_ml.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2F0135D310200B9EC46 /* libopencv_ml.dylib */; };
+		F280F2FD135D310200B9EC46 /* libopencv_objdetect.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2F1135D310200B9EC46 /* libopencv_objdetect.dylib */; };
+		F280F2FE135D310200B9EC46 /* libopencv_video.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2F2135D310200B9EC46 /* libopencv_video.dylib */; };
+		F280F303135D32C500B9EC46 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F2FF135D32C500B9EC46 /* Quartz.framework */; };
+		F280F304135D32C500B9EC46 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F300135D32C500B9EC46 /* OpenGL.framework */; };
+		F280F305135D32C500B9EC46 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F301135D32C500B9EC46 /* CoreVideo.framework */; };
+		F280F306135D32C500B9EC46 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F302135D32C500B9EC46 /* QTKit.framework */; };
+		F280F308135D376800B9EC46 /* libOpenCV.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F307135D376800B9EC46 /* libOpenCV.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +73,31 @@
 		F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = osxwindowtestTests.m; sourceTree = "<group>"; };
 		F280F2D0135AC3FE00B9EC46 /* nestlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nestlib.c; sourceTree = "<group>"; };
 		F280F2D1135AC3FE00B9EC46 /* nestlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nestlib.h; sourceTree = "<group>"; };
+		F280F2D4135D2E2700B9EC46 /* CVOCVController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CVOCVController.m; path = CVOCV/CVOCVController.m; sourceTree = "<group>"; };
+		F280F2D5135D2E2700B9EC46 /* OpenCVProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenCVProcessor.m; path = CVOCV/OpenCVProcessor.m; sourceTree = "<group>"; };
+		F280F2D6135D2E2700B9EC46 /* OpenCVProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenCVProcessor.h; path = CVOCV/OpenCVProcessor.h; sourceTree = "<group>"; };
+		F280F2D7135D2E2700B9EC46 /* CVOCVView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CVOCVView.m; path = CVOCV/CVOCVView.m; sourceTree = "<group>"; };
+		F280F2D8135D2E2700B9EC46 /* CVOCVView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVOCVView.h; path = CVOCV/CVOCVView.h; sourceTree = "<group>"; };
+		F280F2D9135D2E2700B9EC46 /* CVOCVController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CVOCVController.h; path = CVOCV/CVOCVController.h; sourceTree = "<group>"; };
+		F280F2DA135D2E2700B9EC46 /* CGImageWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CGImageWrapper.m; path = CVOCV/CGImageWrapper.m; sourceTree = "<group>"; };
+		F280F2DB135D2E2700B9EC46 /* CGImageWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CGImageWrapper.h; path = CVOCV/CGImageWrapper.h; sourceTree = "<group>"; };
+		F280F2E7135D310200B9EC46 /* libopencv_calib3d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.dylib; path = ../../../../../../../opt/local/lib/libopencv_calib3d.dylib; sourceTree = "<group>"; };
+		F280F2E8135D310200B9EC46 /* libopencv_contrib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_contrib.dylib; path = ../../../../../../../opt/local/lib/libopencv_contrib.dylib; sourceTree = "<group>"; };
+		F280F2E9135D310200B9EC46 /* libopencv_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.dylib; path = ../../../../../../../opt/local/lib/libopencv_core.dylib; sourceTree = "<group>"; };
+		F280F2EA135D310200B9EC46 /* libopencv_features2d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_features2d.dylib; path = ../../../../../../../opt/local/lib/libopencv_features2d.dylib; sourceTree = "<group>"; };
+		F280F2EB135D310200B9EC46 /* libopencv_flann.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_flann.dylib; path = ../../../../../../../opt/local/lib/libopencv_flann.dylib; sourceTree = "<group>"; };
+		F280F2EC135D310200B9EC46 /* libopencv_gpu.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_gpu.dylib; path = ../../../../../../../opt/local/lib/libopencv_gpu.dylib; sourceTree = "<group>"; };
+		F280F2ED135D310200B9EC46 /* libopencv_highgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.dylib; path = ../../../../../../../opt/local/lib/libopencv_highgui.dylib; sourceTree = "<group>"; };
+		F280F2EE135D310200B9EC46 /* libopencv_imgproc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgproc.dylib; path = ../../../../../../../opt/local/lib/libopencv_imgproc.dylib; sourceTree = "<group>"; };
+		F280F2EF135D310200B9EC46 /* libopencv_legacy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_legacy.dylib; path = ../../../../../../../opt/local/lib/libopencv_legacy.dylib; sourceTree = "<group>"; };
+		F280F2F0135D310200B9EC46 /* libopencv_ml.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_ml.dylib; path = ../../../../../../../opt/local/lib/libopencv_ml.dylib; sourceTree = "<group>"; };
+		F280F2F1135D310200B9EC46 /* libopencv_objdetect.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_objdetect.dylib; path = ../../../../../../../opt/local/lib/libopencv_objdetect.dylib; sourceTree = "<group>"; };
+		F280F2F2135D310200B9EC46 /* libopencv_video.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_video.dylib; path = ../../../../../../../opt/local/lib/libopencv_video.dylib; sourceTree = "<group>"; };
+		F280F2FF135D32C500B9EC46 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = ../../../../../../../System/Library/Frameworks/Quartz.framework; sourceTree = "<group>"; };
+		F280F300135D32C500B9EC46 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
+		F280F301135D32C500B9EC46 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = ../../../../../../../System/Library/Frameworks/CoreVideo.framework; sourceTree = "<group>"; };
+		F280F302135D32C500B9EC46 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../../../../../System/Library/Frameworks/QTKit.framework; sourceTree = "<group>"; };
+		F280F307135D376800B9EC46 /* libOpenCV.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOpenCV.a; path = "../../../../../Downloads/CVOCV--OS-X-/libs/opencv/lib/osx/libOpenCV.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +106,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				F20C9FA3135AAA83004F411D /* Cocoa.framework in Frameworks */,
+				F280F2F3135D310200B9EC46 /* libopencv_calib3d.dylib in Frameworks */,
+				F280F2F4135D310200B9EC46 /* libopencv_contrib.dylib in Frameworks */,
+				F280F2F5135D310200B9EC46 /* libopencv_core.dylib in Frameworks */,
+				F280F2F6135D310200B9EC46 /* libopencv_features2d.dylib in Frameworks */,
+				F280F2F7135D310200B9EC46 /* libopencv_flann.dylib in Frameworks */,
+				F280F2F8135D310200B9EC46 /* libopencv_gpu.dylib in Frameworks */,
+				F280F2F9135D310200B9EC46 /* libopencv_highgui.dylib in Frameworks */,
+				F280F2FA135D310200B9EC46 /* libopencv_imgproc.dylib in Frameworks */,
+				F280F2FB135D310200B9EC46 /* libopencv_legacy.dylib in Frameworks */,
+				F280F2FC135D310200B9EC46 /* libopencv_ml.dylib in Frameworks */,
+				F280F2FD135D310200B9EC46 /* libopencv_objdetect.dylib in Frameworks */,
+				F280F2FE135D310200B9EC46 /* libopencv_video.dylib in Frameworks */,
+				F280F303135D32C500B9EC46 /* Quartz.framework in Frameworks */,
+				F280F304135D32C500B9EC46 /* OpenGL.framework in Frameworks */,
+				F280F305135D32C500B9EC46 /* CoreVideo.framework in Frameworks */,
+				F280F306135D32C500B9EC46 /* QTKit.framework in Frameworks */,
+				F280F308135D376800B9EC46 /* libOpenCV.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +141,9 @@
 			isa = PBXGroup;
 			children = (
 				F280F2D0135AC3FE00B9EC46 /* nestlib.c */,
+				F280F2E6135D30F000B9EC46 /* OpenCV */,
 				F280F2D1135AC3FE00B9EC46 /* nestlib.h */,
+				F280F2D3135D2E1100B9EC46 /* CVOCV */,
 				F20C9FA8135AAA83004F411D /* osxwindowtest */,
 				F20C9FC3135AAA83004F411D /* osxwindowtestTests */,
 				F20C9FA1135AAA83004F411D /* Frameworks */,
@@ -98,6 +163,10 @@
 		F20C9FA1135AAA83004F411D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F280F2FF135D32C500B9EC46 /* Quartz.framework */,
+				F280F300135D32C500B9EC46 /* OpenGL.framework */,
+				F280F301135D32C500B9EC46 /* CoreVideo.framework */,
+				F280F302135D32C500B9EC46 /* QTKit.framework */,
 				F20C9FA2135AAA83004F411D /* Cocoa.framework */,
 				F20C9FA4135AAA83004F411D /* Other Frameworks */,
 			);
@@ -155,6 +224,41 @@
 				F20C9FC9135AAA83004F411D /* osxwindowtestTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F280F2D3135D2E1100B9EC46 /* CVOCV */ = {
+			isa = PBXGroup;
+			children = (
+				F280F2D9135D2E2700B9EC46 /* CVOCVController.h */,
+				F280F2D4135D2E2700B9EC46 /* CVOCVController.m */,
+				F280F2D5135D2E2700B9EC46 /* OpenCVProcessor.m */,
+				F280F2D6135D2E2700B9EC46 /* OpenCVProcessor.h */,
+				F280F2D7135D2E2700B9EC46 /* CVOCVView.m */,
+				F280F2D8135D2E2700B9EC46 /* CVOCVView.h */,
+				F280F2DA135D2E2700B9EC46 /* CGImageWrapper.m */,
+				F280F2DB135D2E2700B9EC46 /* CGImageWrapper.h */,
+			);
+			name = CVOCV;
+			sourceTree = "<group>";
+		};
+		F280F2E6135D30F000B9EC46 /* OpenCV */ = {
+			isa = PBXGroup;
+			children = (
+				F280F307135D376800B9EC46 /* libOpenCV.a */,
+				F280F2E7135D310200B9EC46 /* libopencv_calib3d.dylib */,
+				F280F2E8135D310200B9EC46 /* libopencv_contrib.dylib */,
+				F280F2E9135D310200B9EC46 /* libopencv_core.dylib */,
+				F280F2EA135D310200B9EC46 /* libopencv_features2d.dylib */,
+				F280F2EB135D310200B9EC46 /* libopencv_flann.dylib */,
+				F280F2EC135D310200B9EC46 /* libopencv_gpu.dylib */,
+				F280F2ED135D310200B9EC46 /* libopencv_highgui.dylib */,
+				F280F2EE135D310200B9EC46 /* libopencv_imgproc.dylib */,
+				F280F2EF135D310200B9EC46 /* libopencv_legacy.dylib */,
+				F280F2F0135D310200B9EC46 /* libopencv_ml.dylib */,
+				F280F2F1135D310200B9EC46 /* libopencv_objdetect.dylib */,
+				F280F2F2135D310200B9EC46 /* libopencv_video.dylib */,
+			);
+			name = OpenCV;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,6 +369,10 @@
 				F20C9FB0135AAA83004F411D /* main.m in Sources */,
 				F20C9FB6135AAA83004F411D /* osxwindowtestAppDelegate.m in Sources */,
 				F280F2D2135AC3FE00B9EC46 /* nestlib.c in Sources */,
+				F280F2DC135D2E2700B9EC46 /* CVOCVController.m in Sources */,
+				F280F2DD135D2E2700B9EC46 /* OpenCVProcessor.m in Sources */,
+				F280F2DE135D2E2700B9EC46 /* CVOCVView.m in Sources */,
+				F280F2DF135D2E2700B9EC46 /* CGImageWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +433,7 @@
 		F20C9FCE135AAA83004F411D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -337,12 +446,14 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "/opt/local/include/**";
 			};
 			name = Debug;
 		};
 		F20C9FCF135AAA83004F411D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -351,6 +462,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "/opt/local/include/**";
 			};
 			name = Release;
 		};
@@ -364,6 +476,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "osxwindowtest/osxwindowtest-Prefix.pch";
 				INFOPLIST_FILE = "osxwindowtest/osxwindowtest-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+					"\"$(SRCROOT)/../../../../../Downloads/CVOCV--OS-X-/libs/opencv/lib/osx\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -379,6 +496,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "osxwindowtest/osxwindowtest-Prefix.pch";
 				INFOPLIST_FILE = "osxwindowtest/osxwindowtest-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+					"\"$(SRCROOT)/../../../../../Downloads/CVOCV--OS-X-/libs/opencv/lib/osx\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

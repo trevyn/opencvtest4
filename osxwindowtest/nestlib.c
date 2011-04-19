@@ -40,7 +40,6 @@ int  USBSerialInit();
 int USBSerialInit()
 {
     int fd;
-    int i, j;
     struct termios options;
     
     /* open the USB Serial Port */
