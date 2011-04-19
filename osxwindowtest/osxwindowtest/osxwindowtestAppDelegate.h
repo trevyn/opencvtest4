@@ -16,9 +16,11 @@
     NSTextField *commandField;
     int fd;
 
+    NSTextView *logTextView;
 }
 
 
+@property (assign) IBOutlet NSTextView *logTextView;
 @property (assign) IBOutlet NSWindow *window;
 - (IBAction)didPushButton:(id)sender;
 @property (assign) IBOutlet NSScrollView *logView;

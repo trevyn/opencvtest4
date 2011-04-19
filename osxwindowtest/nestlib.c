@@ -85,8 +85,8 @@ void USBSerialGetLine(int fd,char *buffer,int bufsize)
         nbytes= read(fd,&inchar,1);
  //       printf("nbytes: %ld\n",nbytes);
         if(nbytes > 0) {
-            if (inchar == '\r') continue;
-            if (inchar == '\n') break;
+//            if (inchar == '\r') continue;
+//            if (inchar == '\n') break;
             *bufptr = inchar;
             ++bufptr;
             bufsize--;
