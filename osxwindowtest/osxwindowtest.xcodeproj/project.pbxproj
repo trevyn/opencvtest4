@@ -17,6 +17,7 @@
 		F20C9FC8135AAA83004F411D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FC6135AAA83004F411D /* InfoPlist.strings */; };
 		F20C9FCB135AAA83004F411D /* osxwindowtestTests.h in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FCA135AAA83004F411D /* osxwindowtestTests.h */; };
 		F20C9FCD135AAA83004F411D /* osxwindowtestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */; };
+		F280F2D2135AC3FE00B9EC46 /* nestlib.c in Sources */ = {isa = PBXBuildFile; fileRef = F280F2D0135AC3FE00B9EC46 /* nestlib.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,20 +36,22 @@
 		F20C9FA5135AAA83004F411D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		F20C9FA6135AAA83004F411D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F20C9FA7135AAA83004F411D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		F20C9FAA135AAA83004F411D /* osxwindowtest-Info.plist */ = {isa = PBXFileReference; path = "osxwindowtest-Info.plist"; sourceTree = "<group>"; };
+		F20C9FAA135AAA83004F411D /* osxwindowtest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "osxwindowtest-Info.plist"; sourceTree = "<group>"; };
 		F20C9FAC135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F20C9FAE135AAA83004F411D /* osxwindowtest-Prefix.pch */ = {isa = PBXFileReference; path = "osxwindowtest-Prefix.pch"; sourceTree = "<group>"; };
+		F20C9FAE135AAA83004F411D /* osxwindowtest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "osxwindowtest-Prefix.pch"; sourceTree = "<group>"; };
 		F20C9FAF135AAA83004F411D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F20C9FB2135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		F20C9FB4135AAA83004F411D /* osxwindowtestAppDelegate.h */ = {isa = PBXFileReference; path = osxwindowtestAppDelegate.h; sourceTree = "<group>"; };
+		F20C9FB4135AAA83004F411D /* osxwindowtestAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = osxwindowtestAppDelegate.h; sourceTree = "<group>"; };
 		F20C9FB5135AAA83004F411D /* osxwindowtestAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = osxwindowtestAppDelegate.m; sourceTree = "<group>"; };
 		F20C9FB8135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		F20C9FBF135AAA83004F411D /* osxwindowtestTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = osxwindowtestTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F20C9FC5135AAA83004F411D /* osxwindowtestTests-Info.plist */ = {isa = PBXFileReference; path = "osxwindowtestTests-Info.plist"; sourceTree = "<group>"; };
+		F20C9FC5135AAA83004F411D /* osxwindowtestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "osxwindowtestTests-Info.plist"; sourceTree = "<group>"; };
 		F20C9FC7135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F20C9FC9135AAA83004F411D /* osxwindowtestTests-Prefix.pch */ = {isa = PBXFileReference; path = "osxwindowtestTests-Prefix.pch"; sourceTree = "<group>"; };
+		F20C9FC9135AAA83004F411D /* osxwindowtestTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "osxwindowtestTests-Prefix.pch"; sourceTree = "<group>"; };
 		F20C9FCA135AAA83004F411D /* osxwindowtestTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = osxwindowtestTests.h; sourceTree = "<group>"; };
 		F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = osxwindowtestTests.m; sourceTree = "<group>"; };
+		F280F2D0135AC3FE00B9EC46 /* nestlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nestlib.c; sourceTree = "<group>"; };
+		F280F2D1135AC3FE00B9EC46 /* nestlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nestlib.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,8 @@
 		F20C9F93135AAA82004F411D = {
 			isa = PBXGroup;
 			children = (
+				F280F2D0135AC3FE00B9EC46 /* nestlib.c */,
+				F280F2D1135AC3FE00B9EC46 /* nestlib.h */,
 				F20C9FA8135AAA83004F411D /* osxwindowtest */,
 				F20C9FC3135AAA83004F411D /* osxwindowtestTests */,
 				F20C9FA1135AAA83004F411D /* Frameworks */,
@@ -259,6 +264,7 @@
 			files = (
 				F20C9FB0135AAA83004F411D /* main.m in Sources */,
 				F20C9FB6135AAA83004F411D /* osxwindowtestAppDelegate.m in Sources */,
+				F280F2D2135AC3FE00B9EC46 /* nestlib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +447,7 @@
 				F20C9FD2135AAA83004F411D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F20C9FD3135AAA83004F411D /* Build configuration list for PBXNativeTarget "osxwindowtestTests" */ = {
 			isa = XCConfigurationList;
@@ -449,6 +456,7 @@
 				F20C9FD5135AAA83004F411D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
