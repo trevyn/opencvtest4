@@ -1,0 +1,456 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F20C9FA3135AAA83004F411D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F20C9FA2135AAA83004F411D /* Cocoa.framework */; };
+		F20C9FAD135AAA83004F411D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FAB135AAA83004F411D /* InfoPlist.strings */; };
+		F20C9FB0135AAA83004F411D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F20C9FAF135AAA83004F411D /* main.m */; };
+		F20C9FB3135AAA83004F411D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FB1135AAA83004F411D /* Credits.rtf */; };
+		F20C9FB6135AAA83004F411D /* osxwindowtestAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F20C9FB5135AAA83004F411D /* osxwindowtestAppDelegate.m */; };
+		F20C9FB9135AAA83004F411D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FB7135AAA83004F411D /* MainMenu.xib */; };
+		F20C9FC0135AAA83004F411D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F20C9FA2135AAA83004F411D /* Cocoa.framework */; };
+		F20C9FC8135AAA83004F411D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FC6135AAA83004F411D /* InfoPlist.strings */; };
+		F20C9FCB135AAA83004F411D /* osxwindowtestTests.h in Resources */ = {isa = PBXBuildFile; fileRef = F20C9FCA135AAA83004F411D /* osxwindowtestTests.h */; };
+		F20C9FCD135AAA83004F411D /* osxwindowtestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F20C9FC1135AAA83004F411D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F20C9F95135AAA82004F411D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F20C9F9D135AAA83004F411D;
+			remoteInfo = osxwindowtest;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F20C9F9E135AAA83004F411D /* osxwindowtest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = osxwindowtest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F20C9FA2135AAA83004F411D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		F20C9FA5135AAA83004F411D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		F20C9FA6135AAA83004F411D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F20C9FA7135AAA83004F411D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F20C9FAA135AAA83004F411D /* osxwindowtest-Info.plist */ = {isa = PBXFileReference; path = "osxwindowtest-Info.plist"; sourceTree = "<group>"; };
+		F20C9FAC135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F20C9FAE135AAA83004F411D /* osxwindowtest-Prefix.pch */ = {isa = PBXFileReference; path = "osxwindowtest-Prefix.pch"; sourceTree = "<group>"; };
+		F20C9FAF135AAA83004F411D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F20C9FB2135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		F20C9FB4135AAA83004F411D /* osxwindowtestAppDelegate.h */ = {isa = PBXFileReference; path = osxwindowtestAppDelegate.h; sourceTree = "<group>"; };
+		F20C9FB5135AAA83004F411D /* osxwindowtestAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = osxwindowtestAppDelegate.m; sourceTree = "<group>"; };
+		F20C9FB8135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F20C9FBF135AAA83004F411D /* osxwindowtestTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = osxwindowtestTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F20C9FC5135AAA83004F411D /* osxwindowtestTests-Info.plist */ = {isa = PBXFileReference; path = "osxwindowtestTests-Info.plist"; sourceTree = "<group>"; };
+		F20C9FC7135AAA83004F411D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F20C9FC9135AAA83004F411D /* osxwindowtestTests-Prefix.pch */ = {isa = PBXFileReference; path = "osxwindowtestTests-Prefix.pch"; sourceTree = "<group>"; };
+		F20C9FCA135AAA83004F411D /* osxwindowtestTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = osxwindowtestTests.h; sourceTree = "<group>"; };
+		F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = osxwindowtestTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F20C9F9B135AAA83004F411D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20C9FA3135AAA83004F411D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F20C9FBB135AAA83004F411D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20C9FC0135AAA83004F411D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F20C9F93135AAA82004F411D = {
+			isa = PBXGroup;
+			children = (
+				F20C9FA8135AAA83004F411D /* osxwindowtest */,
+				F20C9FC3135AAA83004F411D /* osxwindowtestTests */,
+				F20C9FA1135AAA83004F411D /* Frameworks */,
+				F20C9F9F135AAA83004F411D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F20C9F9F135AAA83004F411D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9F9E135AAA83004F411D /* osxwindowtest.app */,
+				F20C9FBF135AAA83004F411D /* osxwindowtestTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F20C9FA1135AAA83004F411D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9FA2135AAA83004F411D /* Cocoa.framework */,
+				F20C9FA4135AAA83004F411D /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F20C9FA4135AAA83004F411D /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9FA5135AAA83004F411D /* AppKit.framework */,
+				F20C9FA6135AAA83004F411D /* CoreData.framework */,
+				F20C9FA7135AAA83004F411D /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		F20C9FA8135AAA83004F411D /* osxwindowtest */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9FB4135AAA83004F411D /* osxwindowtestAppDelegate.h */,
+				F20C9FB5135AAA83004F411D /* osxwindowtestAppDelegate.m */,
+				F20C9FB7135AAA83004F411D /* MainMenu.xib */,
+				F20C9FA9135AAA83004F411D /* Supporting Files */,
+			);
+			path = osxwindowtest;
+			sourceTree = "<group>";
+		};
+		F20C9FA9135AAA83004F411D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9FAA135AAA83004F411D /* osxwindowtest-Info.plist */,
+				F20C9FAB135AAA83004F411D /* InfoPlist.strings */,
+				F20C9FAE135AAA83004F411D /* osxwindowtest-Prefix.pch */,
+				F20C9FAF135AAA83004F411D /* main.m */,
+				F20C9FB1135AAA83004F411D /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F20C9FC3135AAA83004F411D /* osxwindowtestTests */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9FCA135AAA83004F411D /* osxwindowtestTests.h */,
+				F20C9FCC135AAA83004F411D /* osxwindowtestTests.m */,
+				F20C9FC4135AAA83004F411D /* Supporting Files */,
+			);
+			path = osxwindowtestTests;
+			sourceTree = "<group>";
+		};
+		F20C9FC4135AAA83004F411D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F20C9FC5135AAA83004F411D /* osxwindowtestTests-Info.plist */,
+				F20C9FC6135AAA83004F411D /* InfoPlist.strings */,
+				F20C9FC9135AAA83004F411D /* osxwindowtestTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F20C9F9D135AAA83004F411D /* osxwindowtest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F20C9FD0135AAA83004F411D /* Build configuration list for PBXNativeTarget "osxwindowtest" */;
+			buildPhases = (
+				F20C9F9A135AAA83004F411D /* Sources */,
+				F20C9F9B135AAA83004F411D /* Frameworks */,
+				F20C9F9C135AAA83004F411D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = osxwindowtest;
+			productName = osxwindowtest;
+			productReference = F20C9F9E135AAA83004F411D /* osxwindowtest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F20C9FBE135AAA83004F411D /* osxwindowtestTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F20C9FD3135AAA83004F411D /* Build configuration list for PBXNativeTarget "osxwindowtestTests" */;
+			buildPhases = (
+				F20C9FBA135AAA83004F411D /* Sources */,
+				F20C9FBB135AAA83004F411D /* Frameworks */,
+				F20C9FBC135AAA83004F411D /* Resources */,
+				F20C9FBD135AAA83004F411D /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F20C9FC2135AAA83004F411D /* PBXTargetDependency */,
+			);
+			name = osxwindowtestTests;
+			productName = osxwindowtestTests;
+			productReference = F20C9FBF135AAA83004F411D /* osxwindowtestTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F20C9F95135AAA82004F411D /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = F20C9F98135AAA82004F411D /* Build configuration list for PBXProject "osxwindowtest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F20C9F93135AAA82004F411D;
+			productRefGroup = F20C9F9F135AAA83004F411D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F20C9F9D135AAA83004F411D /* osxwindowtest */,
+				F20C9FBE135AAA83004F411D /* osxwindowtestTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F20C9F9C135AAA83004F411D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20C9FAD135AAA83004F411D /* InfoPlist.strings in Resources */,
+				F20C9FB3135AAA83004F411D /* Credits.rtf in Resources */,
+				F20C9FB9135AAA83004F411D /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F20C9FBC135AAA83004F411D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20C9FC8135AAA83004F411D /* InfoPlist.strings in Resources */,
+				F20C9FCB135AAA83004F411D /* osxwindowtestTests.h in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F20C9FBD135AAA83004F411D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F20C9F9A135AAA83004F411D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20C9FB0135AAA83004F411D /* main.m in Sources */,
+				F20C9FB6135AAA83004F411D /* osxwindowtestAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F20C9FBA135AAA83004F411D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F20C9FCD135AAA83004F411D /* osxwindowtestTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F20C9FC2135AAA83004F411D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F20C9F9D135AAA83004F411D /* osxwindowtest */;
+			targetProxy = F20C9FC1135AAA83004F411D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F20C9FAB135AAA83004F411D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F20C9FAC135AAA83004F411D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F20C9FB1135AAA83004F411D /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F20C9FB2135AAA83004F411D /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		F20C9FB7135AAA83004F411D /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F20C9FB8135AAA83004F411D /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		F20C9FC6135AAA83004F411D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F20C9FC7135AAA83004F411D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F20C9FCE135AAA83004F411D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F20C9FCF135AAA83004F411D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F20C9FD1135AAA83004F411D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "osxwindowtest/osxwindowtest-Prefix.pch";
+				INFOPLIST_FILE = "osxwindowtest/osxwindowtest-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F20C9FD2135AAA83004F411D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "osxwindowtest/osxwindowtest-Prefix.pch";
+				INFOPLIST_FILE = "osxwindowtest/osxwindowtest-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		F20C9FD4135AAA83004F411D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/osxwindowtest.app/Contents/MacOS/osxwindowtest";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "osxwindowtestTests/osxwindowtestTests-Prefix.pch";
+				INFOPLIST_FILE = "osxwindowtestTests/osxwindowtestTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		F20C9FD5135AAA83004F411D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/osxwindowtest.app/Contents/MacOS/osxwindowtest";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "osxwindowtestTests/osxwindowtestTests-Prefix.pch";
+				INFOPLIST_FILE = "osxwindowtestTests/osxwindowtestTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F20C9F98135AAA82004F411D /* Build configuration list for PBXProject "osxwindowtest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20C9FCE135AAA83004F411D /* Debug */,
+				F20C9FCF135AAA83004F411D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F20C9FD0135AAA83004F411D /* Build configuration list for PBXNativeTarget "osxwindowtest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20C9FD1135AAA83004F411D /* Debug */,
+				F20C9FD2135AAA83004F411D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F20C9FD3135AAA83004F411D /* Build configuration list for PBXNativeTarget "osxwindowtestTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F20C9FD4135AAA83004F411D /* Debug */,
+				F20C9FD5135AAA83004F411D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F20C9F95135AAA82004F411D /* Project object */;
+}
