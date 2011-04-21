@@ -12,11 +12,15 @@
 #import "CVOCVController.h"
 
 @implementation CVOCVView
+@synthesize cameraId;
+
 
 static BOOL initialized = NO;
 
 - (id) initWithFrame: (NSRect) frame
 {
+
+    
 	GLuint attribs[] = 
 	{
 		NSOpenGLPFANoRecovery,
@@ -38,6 +42,12 @@ static BOOL initialized = NO;
     }
 
 	return self = [super initWithFrame:frame pixelFormat: [fmt autorelease]];
+}
+
+- (void)awakeFromNib {
+        NSLog(cameraId);
+        [[[NSApplication sharedApplication] delegate] logString: cameraId];
+
 }
 
 - (void)dealloc 
@@ -225,6 +235,7 @@ static BOOL initialized = NO;
 
 - (void)mouseDown:(NSEvent *)theEvent 
 {
+
     NSPoint windowPoint = [theEvent locationInWindow];
     float x = windowPoint.x;
     float y = windowPoint.y;

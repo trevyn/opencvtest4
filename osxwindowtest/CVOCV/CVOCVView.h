@@ -8,6 +8,7 @@
 
 #include "cv.h"
 #import <Cocoa/Cocoa.h>
+#import "osxwindowtestAppDelegate.h"
 
 #define glReportError()                             \
 {                                                   \
@@ -36,11 +37,15 @@ struct cvTexture {
 {
     @public
     
+        NSString *cameraId;
+    
         int imageIndex;
         struct cvTexture cvTextures[IMAGE_CACHE_SIZE];
     
         GLuint rectList;
 }
+
+@property (nonatomic, retain) NSString *cameraId;
 
 //If we want to draw using PBOs.
 -(void) doPBO:(struct cvTexture*)cvTex;

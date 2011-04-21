@@ -19,7 +19,7 @@
     IBOutlet CVOCVView *openGLView;
     IBOutlet IKImageView *imageView;
     IBOutlet QTCaptureView *mCaptureView;
-   
+       
     QTCaptureSession                    *mCaptureSession;
     QTCaptureMovieFileOutput            *mCaptureMovieFileOutput;
     QTCaptureDeviceInput                *mCaptureVideoDeviceInput;

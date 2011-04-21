@@ -64,13 +64,20 @@ static IplImage *capturedImage;
 	NSError *error;
 	
     //Find a device  
-    QTCaptureDevice *videoDevice = [QTCaptureDevice defaultInputDeviceWithMediaType:QTMediaTypeVideo];
-    success = [videoDevice open:&error];
+    QTCaptureDevice *videoDevice;
     
-    NSLog(@"Devices found: %@", [QTCaptureDevice inputDevices]);
+ //   = [QTCaptureDevice defaultInputDeviceWithMediaType:QTMediaTypeVideo];
     
-    videoDevice = [[QTCaptureDevice inputDevices] objectAtIndex:5];
+    NSLog(@"Devices found:");
     
+    
+    for (QTCaptureDevice *element in [QTCaptureDevice inputDevicesWithMediaType:QTMediaTypeVideo]) {
+        NSLog([element description]);
+        NSLog([element uniqueID]);
+    }
+        
+    videoDevice = [QTCaptureDevice deviceWithUniqueID:@"0xfa4000000ac83450"];
+   
     NSLog(@"Selecting device %@", videoDevice);
     
     [videoDevice open:&error];
@@ -189,12 +196,32 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     [wrappedImage release];
 }
 
+
+
+- (NSString *)qtTimeAsString:(QTTime)currQTTime
+{
+	int actualSeconds = currQTTime.timeValue/currQTTime.timeScale;
+	div_t hours = div(actualSeconds,3600);
+	div_t minutes = div(hours.rem,60);
+	
+	// TODO: Internationalize these time strings if necessary.
+	if (hours.quot == 0) {
+		return [NSString stringWithFormat:@"%d:%.2d", minutes.quot, minutes.rem];
+	}
+	else {
+		return [NSString stringWithFormat:@"%d:%02d:%02d", hours.quot, minutes.quot, minutes.rem];
+	}	
+}
+
+
 /*
  * Here's one reference that I found moderately useful for this CoreVideo stuff:
  * http://developer.apple.com/documentation/graphicsimaging/Reference/CoreVideoRef/Reference/reference.html
  */
 - (void)captureOutput:(QTCaptureOutput *)captureOutput didOutputVideoFrame:(CVImageBufferRef)videoFrame withSampleBuffer:(QTSampleBuffer *)sampleBuffer fromConnection:(QTCaptureConnection *)connection
 {
+//    NSLog([self qtTimeAsString:[sampleBuffer presentationTime]]);
+    
     CVPixelBufferLockBaseAddress((CVPixelBufferRef)videoFrame, 0);
  
     
@@ -202,6 +229,8 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     UInt8 *inBuf= (UInt8 *) CVPixelBufferGetBaseAddress((CVPixelBufferRef)videoFrame);
     int length = CVPixelBufferGetDataSize((CVPixelBufferRef)videoFrame);
 
+    // conver bgra to rgb
+    
     for (int index = 0; index < length; index+= 4) {
         ++inBuf;
         *(outBuf++)= *inBuf;
@@ -282,7 +311,54 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     //IplImage *resultImage = [OpenCVProcessor noiseFilter:frameImage];
     //IplImage *resultImage = [OpenCVProcessor findSquares:frameImage];
     //IplImage *resultImage = [OpenCVProcessor hueSatHistogram:frameImage];
-    IplImage *resultImage = [OpenCVProcessor houghLinesStandard:frameImage];
+    
+    CvSize imgSize;                 
+    imgSize.width = 320; 
+    imgSize.height = 240; 
+
+    IplImage* hannImage=     cvCreateImage(imgSize, IPL_DEPTH_8U, 1); 
+    IplImage* greyImage=     cvCreateImage(imgSize, IPL_DEPTH_8U, 1); 
+
+    cvCvtColor(frameImage,greyImage,CV_BGR2GRAY); 
+        
+    // project and calculate hann window
+    
+    int i, j, k;
+    uchar 	*inData= ( uchar* ) greyImage->imageData;
+    uchar 	*hannImageData= ( uchar* ) hannImage->imageData;
+    unsigned long acc;
+    
+    for( j = 0 ; j < greyImage->width ; j++) {
+        
+        // sum input column
+        
+        acc= 0;
+        for( i = 0; i < greyImage->height ; i++ ) {
+            acc+= inData[i * greyImage->widthStep + j];
+        }
+        
+        // hann window and output
+        
+        for( i = 0; i < 240 ; i++ ) {
+            double hannMultiplier = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));  // hann window coefficient
+            hannImageData[i * hannImage->widthStep + j]=  hannMultiplier * (acc/greyImage->height);
+        }
+        
+    }
+    
+    // display hann image
+    
+    IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+        
+    cvCvtColor(hannImage,resultImage,CV_GRAY2BGR); 
+
+    cvReleaseImage(&hannImage);
+    cvReleaseImage(&greyImage);
+    
+//       IplImage *resultImage = [OpenCVProcessor passThrough:hannImage];
+
+    
+//    IplImage *resultImage = [OpenCVProcessor houghLinesStandard:frameImage];
     
     //IplImage *resultImage = [OpenCVProcessor downsize8:frameImage];
     
@@ -292,7 +368,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     
     //IplImage *resultImage = [OpenCVProcessor cannyTest:frameImage];
 
-    [self texturizeImage:resultImage];
+    [self texturizeImage:resultImage];  // resultImage will get dealloc'd after being pushed to OpenGL.
     
     CVPixelBufferUnlockBaseAddress((CVPixelBufferRef)videoFrame, 0);
 }

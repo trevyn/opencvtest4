@@ -26,5 +26,6 @@
 @property (assign) IBOutlet NSScrollView *logView;
 @property (assign) IBOutlet NSTextField *commandField;
 - (IBAction)didHitReturn:(id)sender;
+- (void)logString:(NSString *) string;
 
 @end

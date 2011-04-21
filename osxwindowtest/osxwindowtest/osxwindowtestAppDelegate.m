@@ -46,14 +46,7 @@
     do {
         USBSerialGetLine(fd,buffer,sizeof(buffer));
         if(buffer[0] != '\0') {
-            
-            [[[logTextView textStorage] mutableString] appendString: [NSString stringWithUTF8String:buffer]];
-//            [[[logTextView textStorage] mutableString] appendString: [NSString stringWithUTF8String:"\n"]];
-            
-            NSRange range;
-            range = NSMakeRange ([[logTextView string] length], 0);
-            
-            [logTextView scrollRangeToVisible: range];
+            [self logString:[NSString stringWithUTF8String:buffer]];
             
         }
 //        printf("serial in: %s\n",buffer);
@@ -61,6 +54,12 @@
     
 }
 
+- (void)logString:(NSString *) string {
+    
+    [[[logTextView textStorage] mutableString] appendString: string];
+    [logTextView scrollRangeToVisible: NSMakeRange([[logTextView string] length], 0)];
+
+}
 
 - (IBAction)didHitReturn:(id)sender {
     printf("serial out: %s\n", [[commandField stringValue] UTF8String]);

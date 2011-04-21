@@ -38,7 +38,7 @@
 		F280F304135D32C500B9EC46 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F300135D32C500B9EC46 /* OpenGL.framework */; };
 		F280F305135D32C500B9EC46 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F301135D32C500B9EC46 /* CoreVideo.framework */; };
 		F280F306135D32C500B9EC46 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F302135D32C500B9EC46 /* QTKit.framework */; };
-		F280F308135D376800B9EC46 /* libOpenCV.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F280F307135D376800B9EC46 /* libOpenCV.a */; };
+		F2B819CE135FC199009F65E4 /* libfftw3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F2B819CD135FC199009F65E4 /* libfftw3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,7 +97,7 @@
 		F280F300135D32C500B9EC46 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
 		F280F301135D32C500B9EC46 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = ../../../../../../../System/Library/Frameworks/CoreVideo.framework; sourceTree = "<group>"; };
 		F280F302135D32C500B9EC46 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../../../../../System/Library/Frameworks/QTKit.framework; sourceTree = "<group>"; };
-		F280F307135D376800B9EC46 /* libOpenCV.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOpenCV.a; path = "../../../../../Downloads/CVOCV--OS-X-/libs/opencv/lib/osx/libOpenCV.a"; sourceTree = "<group>"; };
+		F2B819CD135FC199009F65E4 /* libfftw3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfftw3.dylib; path = ../../../../../../../opt/local/lib/libfftw3.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,7 +122,7 @@
 				F280F304135D32C500B9EC46 /* OpenGL.framework in Frameworks */,
 				F280F305135D32C500B9EC46 /* CoreVideo.framework in Frameworks */,
 				F280F306135D32C500B9EC46 /* QTKit.framework in Frameworks */,
-				F280F308135D376800B9EC46 /* libOpenCV.a in Frameworks */,
+				F2B819CE135FC199009F65E4 /* libfftw3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +143,7 @@
 				F280F2D0135AC3FE00B9EC46 /* nestlib.c */,
 				F280F2E6135D30F000B9EC46 /* OpenCV */,
 				F280F2D1135AC3FE00B9EC46 /* nestlib.h */,
+				F2B819CD135FC199009F65E4 /* libfftw3.dylib */,
 				F280F2D3135D2E1100B9EC46 /* CVOCV */,
 				F20C9FA8135AAA83004F411D /* osxwindowtest */,
 				F20C9FC3135AAA83004F411D /* osxwindowtestTests */,
@@ -244,7 +245,6 @@
 		F280F2E6135D30F000B9EC46 /* OpenCV */ = {
 			isa = PBXGroup;
 			children = (
-				F280F307135D376800B9EC46 /* libOpenCV.a */,
 				F280F2E7135D310200B9EC46 /* libopencv_calib3d.dylib */,
 				F280F2E8135D310200B9EC46 /* libopencv_contrib.dylib */,
 				F280F2E9135D310200B9EC46 /* libopencv_core.dylib */,
