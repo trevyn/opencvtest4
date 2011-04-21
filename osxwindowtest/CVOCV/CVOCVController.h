@@ -7,6 +7,7 @@
  */
 
 #include "cv.h"
+#include "fftw3.h"
 
 #import <Cocoa/Cocoa.h>
 #import <QTKit/QTkit.h>
@@ -26,6 +27,16 @@
     QTCaptureDecompressedVideoOutput    *mOutput;
 
     IplImage *frameImage;
+    
+    fftw_complex *fftwSingleRow;
+    fftw_complex *fftwSingleRow2;
+    fftw_complex *fftwStore;
+    
+    int pocline;
+
+    IplImage *pocdisp;
+    IplImage *poc;
+    
 }
 
 + (void) grabImage;

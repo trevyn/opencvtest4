@@ -3,7 +3,7 @@
 #include "highgui.h"
 #include "fftw3.h"
 
-#define kFFTStoreSize 500
+#define kFFTStoreSize 240
 #define kFFTWidth 320
 
 int pocline= 0;
@@ -39,7 +39,7 @@ int main( int argc, char** argv )
     IplImage* greyImage    = cvCreateImage(cvGetSize(colourImage), IPL_DEPTH_8U, 1); 
     IplImage* hannImage    = cvCloneImage(greyImage); 
 	IplImage *poc= cvCreateImage( cvSize( greyImage->width, kFFTStoreSize ), IPL_DEPTH_64F, 1 );
-	IplImage *pocdisp= cvCreateImage( cvSize( greyImage->width, kFFTStoreSize ), IPL_DEPTH_64F, 1 );
+	IplImage *pocdisp= cvCreateImage( cvSize( greyImage->width, kFFTStoreSize ), IPL_DEPTH_8U, 1 );
 	
 	// set up opencv windows
 	
@@ -202,7 +202,11 @@ int main( int argc, char** argv )
 		// print it
 //		printf( "Maxval at (%d, %d) = %2.4f\n", maxloc.x, maxloc.y, maxval );
 		
-		cvCvtScale(poc, pocdisp, 1.0/(maxval/2), 0);
+//        cvConvertScale(dft_re,dft_orig,255,0); //255.0*(max-min),0);
+
+        
+        
+		cvCvtScale(poc, pocdisp, (1.0/(maxval/2))*255, 0);
 		
 		cvShowImage("poc",pocdisp);
 		
