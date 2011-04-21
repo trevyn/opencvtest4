@@ -332,8 +332,10 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
         
         // hann window and output
         
-        for( i = 0; i < 240 ; i++ ) {
-            double hannMultiplier = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));  // hann window coefficient
+        double hannMultiplier = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));  // hann window coefficient
+
+//      for( i = 0; i < 240 ; i++ ) {
+        for( i = 0; i < 1 ; i++ ) {
             hannImageData[i * hannImage->widthStep + j]=  hannMultiplier * (acc/greyImage->height);
         }
         
@@ -446,7 +448,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
 
     IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
     
-        cvCvtColor(pocdisp,resultImage,CV_GRAY2BGR); 
+    cvCvtColor(pocdisp,resultImage,CV_GRAY2BGR); 
     
     [self texturizeImage:resultImage];  // resultImage will get dealloc'd after being pushed to OpenGL.
 
