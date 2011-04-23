@@ -28,23 +28,32 @@
 
     IplImage *frameImage;
     
-    fftw_complex *fftwSingleRow;
-    fftw_complex *fftwSingleRow2;
+    fftw_complex *fftwSingleRowIn;
+    fftw_complex *fftwSingleRowOut;
     fftw_complex *fftwStore;
+    
+    fftw_plan fftwForwardPlan;
+    fftw_plan fftwInversePlan;
     
     int pocline;
 
     IplImage *pocdisp;
     IplImage *poc;
+    IplImage *pocOneLine;
     
+    
+    BOOL updated;
+    BOOL grabImage;
+    IplImage *capturedImage;
+
+    NSString *cameraId;
+
 }
 
-+ (void) grabImage;
+@property (nonatomic, retain) NSString *cameraId;
 
-+ (IplImage*) capturedImage;
-
-+ (BOOL) bgUpdated;
-+ (void) setViewed;
+//+ (BOOL) bgUpdated;
+//+ (void) setViewed;
 
 - (void) texturizeImage:(IplImage*) image;
 

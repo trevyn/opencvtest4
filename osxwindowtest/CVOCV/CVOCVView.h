@@ -37,15 +37,15 @@ struct cvTexture {
 {
     @public
     
-        NSString *cameraId;
     
-        int imageIndex;
-        struct cvTexture cvTextures[IMAGE_CACHE_SIZE];
+    int imageIndex;
+    struct cvTexture cvTextures[IMAGE_CACHE_SIZE];
     
-        GLuint rectList;
+    GLuint rectList;
+    
+    BOOL initialized;
+    BOOL toggleStatus;
 }
-
-@property (nonatomic, retain) NSString *cameraId;
 
 //If we want to draw using PBOs.
 -(void) doPBO:(struct cvTexture*)cvTex;

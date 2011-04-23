@@ -9,11 +9,10 @@
 
 @implementation CVOCVController
 
-static BOOL updated;
-static BOOL grabImage;
-static IplImage *capturedImage;
+@synthesize cameraId;
 
-+ (void) grabImage
+
+/*+ (void) grabImage
 {
     grabImage = YES;
 }
@@ -31,20 +30,28 @@ static IplImage *capturedImage;
 + (void) setViewed
 {       
     updated = NO;
-}
+}*/
 
-- (void)awakeFromNib
+- (void)awakeFromNib  // do setup stuff
 {
     // set up storage for fftw
 	
-	fftwSingleRow = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * kFFTWidth * 1 );
-	fftwSingleRow2 = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * kFFTWidth * 1 );
+	fftwSingleRowIn = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * kFFTWidth * 1 );
+	fftwSingleRowOut = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * kFFTWidth * 1 );
 	fftwStore = ( fftw_complex* )fftw_malloc( sizeof( fftw_complex ) * kFFTWidth * kFFTStoreSize );
+    
+    // set up fftw plans
+    
+    fftwForwardPlan = fftw_plan_dft_2d( 1 , kFFTWidth, fftwSingleRowIn, fftwSingleRowOut, FFTW_FORWARD,  FFTW_ESTIMATE );
+    fftwInversePlan = fftw_plan_dft_2d( 1 , kFFTWidth, fftwSingleRowIn, fftwSingleRowOut, FFTW_BACKWARD,  FFTW_ESTIMATE );
 
     // set up poc Images
     
     poc= cvCreateImage( cvSize( kFFTWidth, kFFTStoreSize ), IPL_DEPTH_64F, 1 );
 	pocdisp= cvCreateImage( cvSize( kFFTWidth, kFFTStoreSize ), IPL_DEPTH_8U, 1 );
+
+    // one-pixel-high line for doing range detection
+    pocOneLine= cvCreateImage( cvSize( kFFTWidth, 1 ), IPL_DEPTH_64F, 1 );
 
     
     // Create the capture session
@@ -82,7 +89,7 @@ static IplImage *capturedImage;
         NSLog(@"%@", [element uniqueID]);
     }
         
-    videoDevice = [QTCaptureDevice deviceWithUniqueID:@"0xfa4000000ac83450"];
+    videoDevice = [QTCaptureDevice deviceWithUniqueID:cameraId];
    
     NSLog(@"Selecting device %@", videoDevice);
     
@@ -136,6 +143,9 @@ static IplImage *capturedImage;
 
 - (void)dealloc
 {
+    fftw_destroy_plan( fftwForwardPlan );
+    fftw_destroy_plan( fftwInversePlan );
+    
 	[mCaptureSession release];
 	[mCaptureVideoDeviceInput release];
 
@@ -213,16 +223,18 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
  */
 - (void)captureOutput:(QTCaptureOutput *)captureOutput didOutputVideoFrame:(CVImageBufferRef)videoFrame withSampleBuffer:(QTSampleBuffer *)sampleBuffer fromConnection:(QTCaptureConnection *)connection
 {
+    
 //    NSLog([self qtTimeAsString:[sampleBuffer presentationTime]]);
     
-    CVPixelBufferLockBaseAddress((CVPixelBufferRef)videoFrame, 0);
- 
+    int err= CVPixelBufferLockBaseAddress((CVPixelBufferRef)videoFrame, 0);
+    if(err)
+        printf("CVPixelBufferLockBaseAddress fail\n");
     
     UInt8 *outBuf= frameImage->imageData;
     UInt8 *inBuf= (UInt8 *) CVPixelBufferGetBaseAddress((CVPixelBufferRef)videoFrame);
     int length = CVPixelBufferGetDataSize((CVPixelBufferRef)videoFrame);
 
-    // conver bgra to rgb
+    // convert bgra to greyscale rgb from green channel
     
     for (int index = 0; index < length; index+= 4) {
         ++inBuf;
@@ -231,6 +243,8 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
         *(outBuf++)= *inBuf;
         inBuf+= 3;
     }
+    
+    CVPixelBufferUnlockBaseAddress((CVPixelBufferRef)videoFrame, 0);
 
 //    tmpByte = pixelData[index + 1];
 //        pixelData[index + 1] = pixelData[index + 3];
@@ -287,7 +301,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     
     
     //If we were asked to capture a background frame. Do it now before we unlock the pixels.
-    if(grabImage) {
+/*    if(grabImage) {
         CGImageWrapper *iwrap = [[CGImageWrapper alloc] initWithCGImage:CreateCGImageFromPixelBuffer(videoFrame, kCVPixelFormatType_32BGRA)];
         [self performSelectorOnMainThread:@selector(updateView:) withObject:iwrap waitUntilDone:YES];
         if(!capturedImage) {
@@ -297,7 +311,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
         cvCopy(frameImage, capturedImage, 0);
         updated = YES;
         grabImage = NO;
-    }
+    }*/
     
     //Process the frame, and get the result.
 //    IplImage *resultImage = [OpenCVProcessor passThrough:frameImage];
@@ -313,7 +327,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     IplImage* greyImage=     cvCreateImage(imgSize, IPL_DEPTH_8U, 1); 
 
     cvCvtColor(frameImage,greyImage,CV_BGR2GRAY); 
-        
+    
     // project and calculate hann window
     
     int i, j;
@@ -334,8 +348,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
         
         double hannMultiplier = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));  // hann window coefficient
 
-//      for( i = 0; i < 240 ; i++ ) {
-        for( i = 0; i < 1 ; i++ ) {
+        for( i = 0; i < (openGLView->toggleStatus == YES ? 240 : 1) ; i++ ) {
             hannImageData[i * hannImage->widthStep + j]=  hannMultiplier * (acc/greyImage->height);
         }
         
@@ -343,32 +356,33 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     
     // display hann image
     
-//    IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
-        
-//    cvCvtColor(hannImage,resultImage,CV_GRAY2BGR); 
+    if(openGLView->toggleStatus == YES) {
+        IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+            
+        cvCvtColor(hannImage,resultImage,CV_GRAY2BGR); 
 
-//    [self texturizeImage:resultImage];  // resultImage will get dealloc'd after being pushed to OpenGL.
-
+        [self texturizeImage:resultImage];  // resultImage will get dealloc'd after being pushed to OpenGL.
+    }
     
     
-
-    
-    
-    // set up forward FFT into store plan
-    
-    fftw_plan fft_plan = fftw_plan_dft_2d( 1 , kFFTWidth, fftwSingleRow, &(fftwStore[kFFTWidth * pocline]), FFTW_FORWARD,  FFTW_ESTIMATE );
     
     // load data for fftw
     
     for( int j = 0 ; j < kFFTWidth ; j++) {
-        fftwSingleRow[j][0] = ( double )hannImageData[j];
-        fftwSingleRow[j][1] = 0.0;
+        fftwSingleRowIn[j][0] = ( double )hannImageData[j];
+        fftwSingleRowIn[j][1] = 0.0;
     }
     
-    // run and release plan
+    // run forward fft
     
-    fftw_execute( fft_plan );
-    fftw_destroy_plan( fft_plan );
+    fftw_execute( fftwForwardPlan );
+    
+    // copy data to store
+    
+    for(int j= 0; j < kFFTWidth ; j++) {
+        fftwStore[(kFFTWidth * pocline) + j][0]= fftwSingleRowOut[j][0];
+        fftwStore[(kFFTWidth * pocline) + j][1]= fftwSingleRowOut[j][1];
+    }
     
     // compare pocline against ALL OTHER IN STORE
     
@@ -382,38 +396,43 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
             
             // complex multiply complex img2 by complex conjugate of complex img1
             
-            fftwSingleRow[i][0] = ( img2[i][0] * img1[i][0] ) - ( img2[i][1] * ( -img1[i][1] ) );
-            fftwSingleRow[i][1] = ( img2[i][0] * ( -img1[i][1] ) ) + ( img2[i][1] * img1[i][0] );
+            fftwSingleRowIn[i][0] = ( img2[i][0] * img1[i][0] ) - ( img2[i][1] * ( -img1[i][1] ) );
+            fftwSingleRowIn[i][1] = ( img2[i][0] * ( -img1[i][1] ) ) + ( img2[i][1] * img1[i][0] );
             
             // set tmp to (real) absolute value of complex number res[i]
             
-            double tmp = sqrt( pow( fftwSingleRow[i][0], 2.0 ) + pow( fftwSingleRow[i][1], 2.0 ) );
+            double tmp = sqrt( pow( fftwSingleRowIn[i][0], 2.0 ) + pow( fftwSingleRowIn[i][1], 2.0 ) );
             
             // complex divide res[i] by (real) absolute value of res[i]
             // (this is the normalization step)
             
             if(tmp == 0) {
-                fftwSingleRow[i][0]= 0;
-                fftwSingleRow[i][1]= 0;
+                fftwSingleRowIn[i][0]= 0;
+                fftwSingleRowIn[i][1]= 0;
             }
             else {
-                fftwSingleRow[i][0] /= tmp;
-                fftwSingleRow[i][1] /= tmp;
+                fftwSingleRowIn[i][0] /= tmp;
+                fftwSingleRowIn[i][1] /= tmp;
             }
         }
         
         // run inverse
         
-        fft_plan = fftw_plan_dft_2d( 1 , kFFTWidth, fftwSingleRow, fftwSingleRow2, FFTW_BACKWARD,  FFTW_ESTIMATE );
-        fftw_execute(fft_plan);
-        fftw_destroy_plan( fft_plan );
+        fftw_execute(fftwInversePlan);
         
         // normalize and copy to result image
         
+        double 	*pocOneLine_data = ( double* )pocOneLine->imageData;
+        if( j == (pocline-1) ) {
+            for( int k = 0 ; k < kFFTWidth ; k++ ) {
+                pocOneLine_data[k] = (fftwSingleRowOut[k][0] / ( double )kFFTWidth);
+            }
+        }
+            
         double 	*poc_data = ( double* )poc->imageData;
         
         for( int k = 0 ; k < kFFTWidth ; k++ ) {
-            poc_data[k+(j*kFFTWidth)] = (fftwSingleRow2[k][0] / ( double )kFFTWidth);
+            poc_data[k+(j*kFFTWidth)] = (fftwSingleRowOut[k][0] / ( double )kFFTWidth);
         }
         
         
@@ -444,15 +463,25 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     // print it
     //		printf( "Maxval at (%d, %d) = %2.4f\n", maxloc.x, maxloc.y, maxval );
     
-    cvCvtScale(poc, pocdisp, (1.0/(maxval/2))*255, 0);
+    
+    if(openGLView->toggleStatus == NO) {
+    
+        cvCvtScale(poc, pocdisp, (1.0/(maxval/2))*255, 0);
 
-    IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+        IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+        
+        cvCvtColor(pocdisp,resultImage,CV_GRAY2BGR); 
+        
+        [self texturizeImage:resultImage];  // resultImage will get dealloc'd after being pushed to OpenGL.
+    }
     
-    cvCvtColor(pocdisp,resultImage,CV_GRAY2BGR); 
     
-    [self texturizeImage:resultImage];  // resultImage will get dealloc'd after being pushed to OpenGL.
-
-    
+    cvMinMaxLoc( pocOneLine, &minval, &maxval, &minloc, &maxloc, 0 );
+    int pocoffset= maxloc.x;
+    if (pocoffset > 160)
+        pocoffset-= 320;
+    if(pocoffset != 0)
+        printf("%d\n", pocoffset);
     
 //    cvShowImage("poc",pocdisp);    
     
@@ -476,7 +505,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     //IplImage *resultImage = [OpenCVProcessor cannyTest:frameImage];
 
     
-    CVPixelBufferUnlockBaseAddress((CVPixelBufferRef)videoFrame, 0);
+//CVPixelBufferUnlockBaseAddress((CVPixelBufferRef)videoFrame, 0);
 }
 
 -(void) texturizeImage:(IplImage*) image

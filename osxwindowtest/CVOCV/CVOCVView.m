@@ -12,10 +12,7 @@
 #import "CVOCVController.h"
 
 @implementation CVOCVView
-@synthesize cameraId;
 
-
-static BOOL initialized = NO;
 
 - (id) initWithFrame: (NSRect) frame
 {
@@ -45,8 +42,6 @@ static BOOL initialized = NO;
 }
 
 - (void)awakeFromNib {
-        NSLog(cameraId);
-        [[[NSApplication sharedApplication] delegate] logString: cameraId];
 
 }
 
@@ -178,7 +173,7 @@ static BOOL initialized = NO;
     
     glLoadIdentity();
 
-    if(index>=0) {
+    if(imageIndex>=0) {
         
         //See if we can kill an old image.
         int killIndex = (imageIndex + (IMAGE_CACHE_SIZE - 1)) % IMAGE_CACHE_SIZE;
@@ -236,6 +231,8 @@ static BOOL initialized = NO;
 - (void)mouseDown:(NSEvent *)theEvent 
 {
 
+    toggleStatus= !toggleStatus;
+    
     NSPoint windowPoint = [theEvent locationInWindow];
     float x = windowPoint.x;
     float y = windowPoint.y;
