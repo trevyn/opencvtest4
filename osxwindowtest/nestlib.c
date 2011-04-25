@@ -23,7 +23,7 @@
 #include <termios.h> /* POSIX terminal control definitions */
 
 /* change this to your USB port Device Name*/
-#define PORT "/dev/tty.usbserial-A7006QPR"  
+#define PORT "/dev/tty.usbmodem1a21"  
 
 void USBSerialGetline(char *buffer, int bufsize);
 int  USBSerialInit();

@@ -15,16 +15,16 @@ void p(char *fmt, ... );
 // 0 A3 P
 // 2 A0 P
 // 4 B5 
-#define motorXDirPin 0
-#define motorYDirPin 2
+#define motorYDirPin 0
+#define motorXDirPin 2
 #define motorZDirPin 4
 
 // 3x pwm outputs for motor speed control (0-5 for direction and speed, all pwmable except 4)
 // 1 A2 P
 // 3 A1 P
 // 5 B6 P
-#define motorXPwmPin 1
-#define motorYPwmPin 3
+#define motorYPwmPin 1
+#define motorXPwmPin 3
 #define motorZPwmPin 5
 
 //#define PIN_B6_HIGH (GPIOB_BASE)->BSRR = BIT(6)
@@ -45,10 +45,21 @@ void setup() {
   attachInterrupt(35, encoder1interrupt, CHANGE);
   
   // set up outputs
-  for(int x= 0; x <= 5; x++) {
-    pinMode(x, OUTPUT);
-    digitalWrite(x, LOW);
-  }
+  pinMode(motorXDirPin, OUTPUT);
+  pinMode(motorYDirPin, OUTPUT);
+  pinMode(motorZDirPin, OUTPUT);
+
+  pwmWrite(motorXPwmPin, 0);
+  pinMode(motorXPwmPin, PWM);
+  pwmWrite(motorXPwmPin, 0);
+
+  pwmWrite(motorYPwmPin, 0);
+  pinMode(motorYPwmPin, PWM);
+  pwmWrite(motorYPwmPin, 0);
+
+  pwmWrite(motorZPwmPin, 0);
+  pinMode(motorZPwmPin, PWM);
+  pwmWrite(motorZPwmPin, 0);
   
   // set pwm frequency
   // this is actually complicated, as the timer overflow affects the actual value of 100% duty cycle on pwmWrite() calls.
@@ -99,10 +110,10 @@ void loop() {
           case 'k':
             driveMotor(motorYDirPin, motorYPwmPin, LOW);
           break;
-          case 'j':
+          case 'l':
             driveMotor(motorXDirPin, motorXPwmPin, HIGH);
           break;
-          case 'l':
+          case 'j':
             driveMotor(motorXDirPin, motorXPwmPin, LOW);
           break;
           case 'y':
@@ -121,12 +132,10 @@ void loop() {
 
 void driveMotor(int dirPin, int pwmPin, int dir) {
     digitalWrite(dirPin, dir ? HIGH : LOW);
-    digitalWrite(pwmPin, HIGH);
-//    pwmWrite(pwmPin, 32767); // duty cycle to 65535
-    delay(25);
-//    pwmWrite(pwmPin, 0); // duty cycle to 65535
-    digitalWrite(pwmPin, LOW);
-    encoderSettle();
+    pwmWrite(pwmPin, 32767); // duty cycle to 65535
+    delay(100);
+    pwmWrite(pwmPin, 0); // duty cycle to 65535
+//    encoderSettle();
 }
   
 

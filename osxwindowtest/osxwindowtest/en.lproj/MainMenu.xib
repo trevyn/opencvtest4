@@ -1535,7 +1535,7 @@
 							<string key="NSFrame">{{20, 720}, {320, 240}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="975361658"/>
+							<reference key="NSNextKeyView" ref="1057519209"/>
 							<reference key="kQTCaptureViewCoderFillColor" ref="108322667"/>
 							<bool key="kQTCaptureViewCoderPreservesAspectRatio">YES</bool>
 						</object>
@@ -1545,29 +1545,29 @@
 							<string key="NSFrame">{{20, 472}, {320, 240}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="249192522"/>
+							<reference key="NSNextKeyView" ref="196780030"/>
 							<string key="NSClassName">CVOCVView</string>
 						</object>
-						<object class="QTCaptureView" id="975361658">
+						<object class="QTCaptureView" id="1057519209">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{352, 720}, {320, 240}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="316421976"/>
+							<reference key="NSNextKeyView" ref="823322260"/>
 							<reference key="kQTCaptureViewCoderFillColor" ref="108322667"/>
 							<bool key="kQTCaptureViewCoderPreservesAspectRatio">YES</bool>
 						</object>
-						<object class="NSCustomView" id="249192522">
+						<object class="NSCustomView" id="196780030">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{352, 472}, {320, 240}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView" ref="898401111"/>
+							<reference key="NSNextKeyView" ref="842937029"/>
 							<string key="NSClassName">CVOCVView</string>
 						</object>
-						<object class="QTCaptureView" id="316421976">
+						<object class="QTCaptureView" id="823322260">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{680, 720}, {320, 240}}</string>
@@ -1577,7 +1577,7 @@
 							<reference key="kQTCaptureViewCoderFillColor" ref="108322667"/>
 							<bool key="kQTCaptureViewCoderPreservesAspectRatio">YES</bool>
 						</object>
-						<object class="NSCustomView" id="898401111">
+						<object class="NSCustomView" id="842937029">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{680, 472}, {320, 240}}</string>
@@ -1604,10 +1604,10 @@
 			<object class="NSCustomObject" id="465231034">
 				<string key="NSClassName">CVOCVController</string>
 			</object>
-			<object class="NSCustomObject" id="258461977">
+			<object class="NSCustomObject" id="563261987">
 				<string key="NSClassName">CVOCVController</string>
 			</object>
-			<object class="NSCustomObject" id="909496633">
+			<object class="NSCustomObject" id="21397211">
 				<string key="NSClassName">CVOCVController</string>
 			</object>
 		</object>
@@ -2353,32 +2353,32 @@
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">mCaptureView</string>
-						<reference key="source" ref="258461977"/>
-						<reference key="destination" ref="975361658"/>
+						<reference key="source" ref="563261987"/>
+						<reference key="destination" ref="1057519209"/>
 					</object>
 					<int key="connectionID">588</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">openGLView</string>
-						<reference key="source" ref="258461977"/>
-						<reference key="destination" ref="249192522"/>
+						<reference key="source" ref="563261987"/>
+						<reference key="destination" ref="196780030"/>
 					</object>
 					<int key="connectionID">589</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">mCaptureView</string>
-						<reference key="source" ref="909496633"/>
-						<reference key="destination" ref="316421976"/>
+						<reference key="source" ref="21397211"/>
+						<reference key="destination" ref="823322260"/>
 					</object>
 					<int key="connectionID">595</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">openGLView</string>
-						<reference key="source" ref="909496633"/>
-						<reference key="destination" ref="898401111"/>
+						<reference key="source" ref="21397211"/>
+						<reference key="destination" ref="842937029"/>
 					</object>
 					<int key="connectionID">596</int>
 				</object>
@@ -2940,11 +2940,11 @@
 							<reference ref="991582622"/>
 							<reference ref="525751386"/>
 							<reference ref="629529548"/>
-							<reference ref="975361658"/>
+							<reference ref="1057519209"/>
 							<reference ref="643745800"/>
-							<reference ref="249192522"/>
-							<reference ref="316421976"/>
-							<reference ref="898401111"/>
+							<reference ref="196780030"/>
+							<reference ref="823322260"/>
+							<reference ref="842937029"/>
 						</object>
 						<reference key="parent" ref="972006081"/>
 					</object>
@@ -3487,12 +3487,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">575</int>
-						<reference key="object" ref="975361658"/>
+						<reference key="object" ref="1057519209"/>
 						<reference key="parent" ref="439893737"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">576</int>
-						<reference key="object" ref="249192522"/>
+						<reference key="object" ref="196780030"/>
 						<reference key="parent" ref="439893737"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -3503,24 +3503,24 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">585</int>
-						<reference key="object" ref="258461977"/>
+						<reference key="object" ref="563261987"/>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">controller2</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">590</int>
-						<reference key="object" ref="909496633"/>
+						<reference key="object" ref="21397211"/>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">controller3</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">593</int>
-						<reference key="object" ref="316421976"/>
+						<reference key="object" ref="823322260"/>
 						<reference key="parent" ref="439893737"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">594</int>
-						<reference key="object" ref="898401111"/>
+						<reference key="object" ref="842937029"/>
 						<reference key="parent" ref="439893737"/>
 					</object>
 				</object>
@@ -4074,7 +4074,7 @@
 								<object class="IBUserDefinedRuntimeAttribute">
 									<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
 									<string key="keyPath">cameraId</string>
-									<string key="value">0xfa2000000ac83450</string>
+									<string key="value">0xfa4000000ac83450</string>
 								</object>
 							</object>
 						</object>
@@ -4086,13 +4086,13 @@
 						<string key="NS.key.0">IBUserDefinedRuntimeAttributesPlaceholderName</string>
 						<object class="IBUserDefinedRuntimeAttributesPlaceholder" key="NS.object.0">
 							<string key="name">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-							<reference key="object" ref="258461977"/>
+							<reference key="object" ref="563261987"/>
 							<object class="NSArray" key="userDefinedRuntimeAttributes">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="IBUserDefinedRuntimeAttribute">
 									<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
 									<string key="keyPath">cameraId</string>
-									<string key="value">0xfa4000001e4e0102</string>
+									<string key="value">0xfd1000001e4e0100</string>
 								</object>
 							</object>
 						</object>
@@ -4102,13 +4102,13 @@
 						<string key="NS.key.0">IBUserDefinedRuntimeAttributesPlaceholderName</string>
 						<object class="IBUserDefinedRuntimeAttributesPlaceholder" key="NS.object.0">
 							<string key="name">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-							<reference key="object" ref="909496633"/>
+							<reference key="object" ref="21397211"/>
 							<object class="NSArray" key="userDefinedRuntimeAttributes">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="IBUserDefinedRuntimeAttribute">
 									<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
 									<string key="keyPath">cameraId</string>
-									<string key="value">0xfd1000001e4e0100</string>
+									<string key="value">0xfd40000005ac8502</string>
 								</object>
 							</object>
 						</object>
