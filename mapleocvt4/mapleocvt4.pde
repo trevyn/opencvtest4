@@ -6,10 +6,10 @@ void p(char *fmt, ... );
 // 34 B15
 // 35 C6
 // 36 C7
-#define ENCODER_0A_READ_FAST() (((GPIOB_BASE)->IDR & BIT(14)) >> 14)
-#define ENCODER_0B_READ_FAST() (((GPIOB_BASE)->IDR & BIT(15)) >> 15)
-#define ENCODER_1A_READ_FAST() (((GPIOC_BASE)->IDR & BIT(6)) >> 6)
-#define ENCODER_1B_READ_FAST() (((GPIOC_BASE)->IDR & BIT(7)) >> 7)
+#define ENCODER_XA_READ_FAST() (((GPIOB_BASE)->IDR & BIT(14)) >> 14)
+#define ENCODER_XB_READ_FAST() (((GPIOB_BASE)->IDR & BIT(15)) >> 15)
+#define ENCODER_YA_READ_FAST() (((GPIOC_BASE)->IDR & BIT(6)) >> 6)
+#define ENCODER_YB_READ_FAST() (((GPIOC_BASE)->IDR & BIT(7)) >> 7)
 
 // 3x output pins for motor direction control
 // 0 A3 P
@@ -30,8 +30,12 @@ void p(char *fmt, ... );
 //#define PIN_B6_HIGH (GPIOB_BASE)->BSRR = BIT(6)
 //#define PIN_B6_LOW  (GPIOB_BASE)->BRR  = BIT(6)
 
-volatile long encoder0Pos = 0;
-volatile long encoder1Pos = 0;
+volatile long encoderXPos = 0;
+volatile long encoderYPos = 0;
+
+long xTarget= 0;
+long yTarget= 0;
+
 
 void setup() {
   // set up encoder inputs as inputs
@@ -41,8 +45,8 @@ void setup() {
   pinMode(36, INPUT);
   
   // install interrupts on A channels
-  attachInterrupt(33, encoder0interrupt, CHANGE);
-  attachInterrupt(35, encoder1interrupt, CHANGE);
+  attachInterrupt(33, encoderXinterrupt, CHANGE);
+  attachInterrupt(35, encoderYinterrupt, CHANGE);
   
   // set up outputs
   pinMode(motorXDirPin, OUTPUT);
@@ -73,23 +77,26 @@ void setup() {
   SerialUSB.println("start");
 }
 
-void encoder0interrupt(void) {
-  if(ENCODER_0A_READ_FAST() == ENCODER_0B_READ_FAST())
-     encoder0Pos--;
+void encoderXinterrupt(void) {
+  if(ENCODER_XA_READ_FAST() == ENCODER_XB_READ_FAST())
+     encoderXPos--;
   else
-     encoder0Pos++;
+     encoderXPos++;
 }
 
-void encoder1interrupt(void) {
-  if(ENCODER_1A_READ_FAST() == ENCODER_1B_READ_FAST())
-     encoder1Pos--;
+void encoderYinterrupt(void) {
+  if(ENCODER_YA_READ_FAST() == ENCODER_YB_READ_FAST())
+     encoderYPos--;
   else
-     encoder1Pos++;
+     encoderYPos++;
 }
 
 
 unsigned char cmdLen= 0;
 char cmdBuf[256];
+long cmdPos, posMultiplier;
+long pos= 0;
+
 
 void loop() {
     if(SerialUSB.available()) {
@@ -103,37 +110,196 @@ void loop() {
         
         // act on command
         
+        uint32 startMillis;
+        
+        long xStart, xFun;
+        long yStart, yFun;
+
+        
         switch(cmdBuf[0]) {
           case 'i':
-            driveMotor(motorYDirPin, motorYPwmPin, HIGH);
+            driveMotor(motorYDirPin, motorYPwmPin, HIGH, 32000, 50);
           break;
           case 'k':
-            driveMotor(motorYDirPin, motorYPwmPin, LOW);
+            driveMotor(motorYDirPin, motorYPwmPin, LOW, 32000, 50);
           break;
           case 'l':
-            driveMotor(motorXDirPin, motorXPwmPin, HIGH);
+            driveMotor(motorXDirPin, motorXPwmPin, HIGH, 32000, 50);
           break;
           case 'j':
-            driveMotor(motorXDirPin, motorXPwmPin, LOW);
+            driveMotor(motorXDirPin, motorXPwmPin, LOW, 32000, 50);
           break;
-          case 'y':
-            driveMotor(motorZDirPin, motorZPwmPin, HIGH);
+          case 'u':
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 50);
           break;
-          case 'h':
-            driveMotor(motorZDirPin, motorZPwmPin, LOW);
+          case 'm':
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 50);
           break;
+          case 's':
+            encoderSettle();
+          break;
+          case 'z':
+            encoderXPos= 0;
+            encoderYPos= 0;
+            encoderSettle();
+          break;
+          case 'c':  // circle!
+          
+            xStart= encoderXPos;
+            yStart= encoderYPos;
+          
+            for(int x= 0; x <= 100; x++) {
+              double pi= 3.14159;
+              
+              xFun= sin((2*pi*x)/100)*2000;
+              yFun= cos((2*pi*x)/100)*2000-2000;
+              
+//               p("%ld: %ld, %ld (diff: %ld, %ld)\n", x, xStart+xFun, yStart+yFun, xFun, yFun);
+               
+               encoderMoveTo(xStart+xFun, yStart+yFun);
+            }
+
+            encoderSettle();
+
+          break;
+
+          case 't':
+             p("start 5 sec\n");
+             startMillis= millis();
+ 
+             do{
+               encoderMoveStep((millis()-startMillis)/5, 0, 30000); 
+             } while(millis() < (startMillis + 5000));
+ 
+             encoderStop();
+ 
+             p("done\n");
+          break;
+
+          case 'x':  // set x target
+
+            pos= 0;
+          
+            if(cmdBuf[1] == '-') {
+               cmdPos= 2;
+               posMultiplier= -1;
+            }
+            else {
+                cmdPos= 1;
+                posMultiplier= 1;
+            }
+            
+            for(;cmdBuf[cmdPos] != '\\';cmdPos++) {
+               if((cmdBuf[cmdPos] < '0') || (cmdBuf[cmdPos] > '9'))
+                 continue;
+               pos*= 10;
+               pos+= cmdBuf[cmdPos]-'0';
+            }
+            pos*= posMultiplier;
+            
+            p("xTarget: %d\n", pos);
+
+            xTarget= pos;
+          break;
+          
+          case 'y':  // set y target
+
+            pos= 0;
+          
+            if(cmdBuf[1] == '-') {
+               cmdPos= 2;
+               posMultiplier= -1;
+            }
+            else {
+                cmdPos= 1;
+                posMultiplier= 1;
+            }
+            
+            for(;cmdBuf[cmdPos] != '\\';cmdPos++) {
+               if((cmdBuf[cmdPos] < '0') || (cmdBuf[cmdPos] > '9'))
+                 continue;
+               pos*= 10;
+               pos+= cmdBuf[cmdPos]-'0';
+            }
+            pos*= posMultiplier;
+            
+            p("yTarget: %d\n", pos);
+
+            yTarget= pos;
+          break;
+
+          case 'g':  // xy go
+
+            p("target: %ld, %ld\n", xTarget, yTarget);
+            p("pos start: %ld, %ld\n", encoderXPos, encoderYPos);
+
+            encoderMoveTo(xTarget, yTarget);
+            encoderSettle();
+
+            p("pos end: %ld, %ld\n", encoderXPos, encoderYPos);
+                 
+          break;
+             
         }
         
         cmdLen= 0;
       }
     }
 }
-  
 
-void driveMotor(int dirPin, int pwmPin, int dir) {
+void encoderMoveTo(long encoderXTarget, long encoderYTarget) {
+  
+  unsigned long driveTickCount;
+
+  for(driveTickCount= 0; driveTickCount < 1000000; driveTickCount++) {
+   
+   encoderMoveStep(encoderXTarget, encoderYTarget, 40000);
+    
+   if((encoderYPos >= encoderYTarget-10) && (encoderYPos <= encoderYTarget+10) &&
+      (encoderXPos >= encoderXTarget-10) && (encoderXPos <= encoderXTarget+10))
+      break;
+      
+  }
+  
+  // stop, note still needs settling
+  
+  encoderStop();
+
+}
+
+void encoderStop(void) {
+  pwmMotor(motorXDirPin, motorXPwmPin, LOW, 0);
+  pwmMotor(motorYDirPin, motorYPwmPin, LOW, 0);
+}
+
+void encoderMoveStep(long encoderXTarget, long encoderYTarget, long dutyCycle) {
+    if(encoderYTarget > (encoderYPos+10))
+      pwmMotor(motorYDirPin, motorYPwmPin, LOW, dutyCycle);
+    else if(encoderYTarget < (encoderYPos-10))
+      pwmMotor(motorYDirPin, motorYPwmPin, HIGH, dutyCycle);
+    else  // ==
+      pwmMotor(motorYDirPin, motorYPwmPin, LOW, 0);
+
+  
+    if(encoderXTarget > (encoderXPos+10))
+      pwmMotor(motorXDirPin, motorXPwmPin, HIGH, dutyCycle);
+    else if(encoderXTarget < (encoderXPos-10))
+      pwmMotor(motorXDirPin, motorXPwmPin, LOW, dutyCycle);
+    else  // ==
+      pwmMotor(motorXDirPin, motorXPwmPin, LOW, 0);
+  
+}
+
+
+void pwmMotor(int dirPin, int pwmPin, int dir, int pwmDuty) {
     digitalWrite(dirPin, dir ? HIGH : LOW);
-    pwmWrite(pwmPin, 32767); // duty cycle to 65535
-    delay(100);
+    pwmWrite(pwmPin, pwmDuty); // duty cycle to 65535
+}
+
+void driveMotor(int dirPin, int pwmPin, int dir, int pwmDuty, int delayTime) {
+    digitalWrite(dirPin, dir ? HIGH : LOW);
+    pwmWrite(pwmPin, pwmDuty); // duty cycle to 65535
+    delay(delayTime);
     pwmWrite(pwmPin, 0); // duty cycle to 65535
 //    encoderSettle();
 }
@@ -150,19 +316,19 @@ void p(char *fmt, ... ){
 
 void encoderSettle(void) {
   
-  long lastEncoder0= encoder0Pos;
-  long lastEncoder1= encoder1Pos;
+  long lastEncoderX= encoderXPos;
+  long lastEncoderY= encoderYPos;
   long lastMoveTick= 0;
   
   for(long tickCount= 0; tickCount < 150000; tickCount++) {
-    if((encoder0Pos != lastEncoder0) || (encoder1Pos != lastEncoder1)) {
-       lastEncoder0= encoder0Pos;
-       lastEncoder1= encoder1Pos;
+    if((encoderXPos != lastEncoderX) || (encoderYPos != lastEncoderY)) {
+       lastEncoderX= encoderXPos;
+       lastEncoderY= encoderYPos;
        lastMoveTick= tickCount;
     }
   }
     
-  p("encoders settled at (%ld,%ld), %ld ticks to settle (waited 30k)\n", encoder0Pos, encoder1Pos, lastMoveTick);  // print encoder position
+  p("encoders settled at (%ld,%ld), %ld ticks to settle (waited 30k)\n", encoderXPos, encoderYPos, lastMoveTick);  // print encoder position
 
 }  
 

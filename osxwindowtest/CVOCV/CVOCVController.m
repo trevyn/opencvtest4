@@ -1,5 +1,7 @@
-#define kFFTStoreSize 240
-#define kFFTWidth 320
+#define kFFTStoreSize 120
+#define kFFTWidth 160
+#define kImageWidth 160
+#define kImageHeight 120
 
 #import "CVOCVController.h"
 #import "OpenCVProcessor.h"
@@ -60,14 +62,16 @@
     mOutput = [[QTCaptureDecompressedVideoOutput alloc] init];
 
     [mOutput setPixelBufferAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithDouble:320.0], (id)kCVPixelBufferWidthKey,
-                                        [NSNumber numberWithDouble:240.0], (id)kCVPixelBufferHeightKey,
+                                        [NSNumber numberWithDouble:kImageWidth], (id)kCVPixelBufferWidthKey,
+                                        [NSNumber numberWithDouble:kImageHeight], (id)kCVPixelBufferHeightKey,
                                         [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA], (id)kCVPixelBufferPixelFormatTypeKey,
                                         nil]];
     
+//    [mOutput setMinimumVideoFrameInterval:1];
+    
     [mOutput setDelegate:self];
 
-    frameImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+    frameImage = cvCreateImage(cvSize(kImageWidth, kImageHeight), IPL_DEPTH_8U, 3);
     
     //(IplImage*)malloc(sizeof(IplImage));
     
@@ -320,8 +324,8 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     //IplImage *resultImage = [OpenCVProcessor hueSatHistogram:frameImage];
     
     CvSize imgSize;                 
-    imgSize.width = 320; 
-    imgSize.height = 240; 
+    imgSize.width = kImageWidth; 
+    imgSize.height = kImageHeight; 
 
     IplImage* hannImage=     cvCreateImage(imgSize, IPL_DEPTH_8U, 1); 
     IplImage* greyImage=     cvCreateImage(imgSize, IPL_DEPTH_8U, 1); 
@@ -348,7 +352,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
         
         double hannMultiplier = 0.5 * (1 - cos(2*3.14159*j/(greyImage->width-1)));  // hann window coefficient
 
-        for( i = 0; i < (openGLView->toggleStatus == YES ? 240 : 1) ; i++ ) {
+        for( i = 0; i < (openGLView->toggleStatus == YES ? kImageHeight : 1) ; i++ ) {
             hannImageData[i * hannImage->widthStep + j]=  hannMultiplier * (acc/greyImage->height);
         }
         
@@ -357,7 +361,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     // display hann image
     
     if(openGLView->toggleStatus == YES) {
-        IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+        IplImage *resultImage = cvCreateImage(cvSize(kImageWidth, kImageHeight), IPL_DEPTH_8U, 3);
             
         cvCvtColor(hannImage,resultImage,CV_GRAY2BGR); 
 
@@ -432,7 +436,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
         double 	*poc_data = ( double* )poc->imageData;
         
         for( int k = 0 ; k < kFFTWidth ; k++ ) {
-            poc_data[k+(j*kFFTWidth)] = (fftwSingleRowOut[k][0] / ( double )kFFTWidth);
+            poc_data[(((kFFTWidth*3/2)-k)%kFFTWidth)+(j*kFFTWidth)] = (fftwSingleRowOut[k][0] / ( double )kFFTWidth);
         }
         
         
@@ -468,7 +472,7 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     
         cvCvtScale(poc, pocdisp, (1.0/(maxval/2))*255, 0);
 
-        IplImage *resultImage = cvCreateImage(cvSize(320, 240), IPL_DEPTH_8U, 3);
+        IplImage *resultImage = cvCreateImage(cvSize(kImageWidth, kImageHeight), IPL_DEPTH_8U, 3);
         
         cvCvtColor(pocdisp,resultImage,CV_GRAY2BGR); 
         
@@ -478,8 +482,8 @@ static CGImageRef CreateCGImageFromPixelBuffer(CVImageBufferRef inImage, OSType 
     
     cvMinMaxLoc( pocOneLine, &minval, &maxval, &minloc, &maxloc, 0 );
     int pocoffset= maxloc.x;
-    if (pocoffset > 160)
-        pocoffset-= 320;
+    if (pocoffset > kImageWidth/2)
+        pocoffset-= kImageWidth;
     if(pocoffset != 0)
         printf("%d\n", pocoffset);
     
