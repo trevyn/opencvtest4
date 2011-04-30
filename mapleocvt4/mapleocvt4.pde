@@ -27,6 +27,9 @@ void p(char *fmt, ... );
 #define motorXPwmPin 3
 #define motorZPwmPin 5
 
+#define voltageSensePin 20
+#define ledPin 13
+
 //#define PIN_B6_HIGH (GPIOB_BASE)->BSRR = BIT(6)
 //#define PIN_B6_LOW  (GPIOB_BASE)->BRR  = BIT(6)
 
@@ -43,6 +46,12 @@ void setup() {
   pinMode(34, INPUT);
   pinMode(35, INPUT);
   pinMode(36, INPUT);
+  
+  pinMode(voltageSensePin, INPUT_ANALOG);
+  pinMode(ledPin, OUTPUT);
+  
+  
+    
   
   // install interrupts on A channels
   attachInterrupt(33, encoderXinterrupt, CHANGE);
@@ -96,9 +105,37 @@ unsigned char cmdLen= 0;
 char cmdBuf[256];
 long cmdPos, posMultiplier;
 long pos= 0;
-
+uint32 lastMillisOn= 0;
 
 void loop() {
+  while(1) {
+  if(analogRead(voltageSensePin) > 240) {
+    lastMillisOn= millis();
+    do {
+      pwmMotor(motorZDirPin, motorZPwmPin, HIGH, 10000);
+      
+      
+//      driveMotor(motorZDirPin, motorZPwmPin, HIGH, 30000, 1);
+//      delay(2);
+    }
+    while (analogRead(voltageSensePin) > 240);
+
+      pwmMotor(motorZDirPin, motorZPwmPin, HIGH, 0);
+
+
+//    delay(10);
+    digitalWrite(ledPin, HIGH);
+  }
+  else if(millis() > lastMillisOn+20) {  // X ms delay before lowering it more
+    driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 1);
+//    delay(1);
+    digitalWrite(ledPin, LOW);
+  }
+  }
+  
+  
+//  delay(5);
+  
     if(SerialUSB.available()) {
       
       char incomingByte = SerialUSB.read();
@@ -117,6 +154,41 @@ void loop() {
 
         
         switch(cmdBuf[0]) {
+          case '1':
+            for(int x= 0; x < 2; x++) {
+            encoderMoveTo(750, 0);
+            encoderMoveTo(0, 0);
+            }
+          
+          break;
+          case '2':
+            for(int x= 0; x < 5; x++) {
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 1);
+            encoderMoveTo(750, 0);
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 1);
+            encoderMoveTo(0, 0);
+            }
+          
+          break;
+          case 'q':
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 30);
+          break;
+          case 'a':
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 30);
+          break;
+          case 'w':
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 5);
+          break;
+          case 's':
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 5);
+          break;
+          case 'e':
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 1);
+          break;
+          case 'd':
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 1);
+          break;
+
           case 'i':
             driveMotor(motorYDirPin, motorYPwmPin, HIGH, 32000, 50);
           break;
@@ -135,9 +207,9 @@ void loop() {
           case 'm':
             driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 50);
           break;
-          case 's':
-            encoderSettle();
-          break;
+//          case 's':
+//            encoderSettle();
+//          break;
           case 'z':
             encoderXPos= 0;
             encoderYPos= 0;
@@ -148,11 +220,11 @@ void loop() {
             xStart= encoderXPos;
             yStart= encoderYPos;
           
-            for(int x= 0; x <= 100; x++) {
+            for(int x= 0; x <= 1000; x++) {
               double pi= 3.14159;
               
-              xFun= sin((2*pi*x)/100)*2000;
-              yFun= cos((2*pi*x)/100)*2000-2000;
+              xFun= sin((2*pi*x)/1000)*2000;
+              yFun= cos((2*pi*x)/1000)*2000-2000;
               
 //               p("%ld: %ld, %ld (diff: %ld, %ld)\n", x, xStart+xFun, yStart+yFun, xFun, yFun);
                
@@ -255,8 +327,8 @@ void encoderMoveTo(long encoderXTarget, long encoderYTarget) {
    
    encoderMoveStep(encoderXTarget, encoderYTarget, 40000);
     
-   if((encoderYPos >= encoderYTarget-10) && (encoderYPos <= encoderYTarget+10) &&
-      (encoderXPos >= encoderXTarget-10) && (encoderXPos <= encoderXTarget+10))
+   if((encoderYPos >= encoderYTarget-5) && (encoderYPos <= encoderYTarget+5) &&
+      (encoderXPos >= encoderXTarget-5) && (encoderXPos <= encoderXTarget+5))
       break;
       
   }
@@ -273,17 +345,17 @@ void encoderStop(void) {
 }
 
 void encoderMoveStep(long encoderXTarget, long encoderYTarget, long dutyCycle) {
-    if(encoderYTarget > (encoderYPos+10))
+    if(encoderYTarget > (encoderYPos+5))
       pwmMotor(motorYDirPin, motorYPwmPin, LOW, dutyCycle);
-    else if(encoderYTarget < (encoderYPos-10))
+    else if(encoderYTarget < (encoderYPos-5))
       pwmMotor(motorYDirPin, motorYPwmPin, HIGH, dutyCycle);
     else  // ==
       pwmMotor(motorYDirPin, motorYPwmPin, LOW, 0);
 
   
-    if(encoderXTarget > (encoderXPos+10))
+    if(encoderXTarget > (encoderXPos+5))
       pwmMotor(motorXDirPin, motorXPwmPin, HIGH, dutyCycle);
-    else if(encoderXTarget < (encoderXPos-10))
+    else if(encoderXTarget < (encoderXPos-5))
       pwmMotor(motorXDirPin, motorXPwmPin, LOW, dutyCycle);
     else  // ==
       pwmMotor(motorXDirPin, motorXPwmPin, LOW, 0);
