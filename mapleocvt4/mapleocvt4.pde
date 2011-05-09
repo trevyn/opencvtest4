@@ -30,6 +30,11 @@ void p(char *fmt, ... );
 #define voltageSensePin 20
 #define ledPin 13
 
+#define xDirForward LOW
+#define xDirReverse HIGH
+#define yDirForward HIGH
+#define yDirReverse LOW
+
 //#define PIN_B6_HIGH (GPIOB_BASE)->BSRR = BIT(6)
 //#define PIN_B6_LOW  (GPIOB_BASE)->BRR  = BIT(6)
 
@@ -108,7 +113,9 @@ long pos= 0;
 uint32 lastMillisOn= 0;
 
 void loop() {
-  while(1) {
+
+
+/*  while(1) {
   if(analogRead(voltageSensePin) > 240) {
     lastMillisOn= millis();
     do {
@@ -131,7 +138,7 @@ void loop() {
 //    delay(1);
     digitalWrite(ledPin, LOW);
   }
-  }
+  }*/
   
   
 //  delay(5);
@@ -248,6 +255,82 @@ void loop() {
              p("done\n");
           break;
 
+          case 'p':  // attempt at PI control!
+ 
+             {
+               long instXTarget, instYTarget, xError, yError, xErrorAcc, yErrorAcc, xOutput, yOutput, xDir, yDir;
+               float pCoeff, iCoeff;
+
+              xErrorAcc= 0;
+              yErrorAcc= 0;
+
+               p("start 5 sec pi\n");
+               startMillis= millis();
+               long printMillis= millis();
+   
+               do {
+               
+                 // do PI control
+                 
+                 instXTarget= 0;
+                 instYTarget= (millis()-startMillis)/5;
+                 
+                 xError= instXTarget - encoderXPos;
+                 yError= instYTarget - encoderYPos;
+               
+                 xErrorAcc+= xError;
+                 yErrorAcc+= yError;
+               
+                 pCoeff= 10;
+                 iCoeff= 0.1;
+               
+                 xOutput= (xError*pCoeff)+(xErrorAcc*iCoeff);
+                 yOutput= (yError*pCoeff)+(yErrorAcc*iCoeff);
+                                  
+                 // deconstruct output variables into direction, and clamp PWM speed to 65535
+ 
+                 if(xOutput < 0) {
+                    xDir= xDirForward;
+                    xOutput= -xOutput;
+                 }
+                 else {
+                    xDir= xDirReverse;
+                 }
+
+                 if(yOutput < 0) {
+                    yDir= yDirForward;
+                    yOutput= -yOutput;
+                 }
+                 else {
+                    yDir= yDirReverse;
+                 }
+             
+                 if(xOutput > 65535)
+                   xOutput= 65535;
+                 if(yOutput > 65535)
+                   yOutput= 65535;
+                 
+                 // do it
+                 if(millis() > printMillis) {
+                  
+                   p("p(%ld, %ld) t(%ld,%ld) e(%ld,%ld) a(%ld,%ld) o(%ld,%ld) d(%ld,%ld)\n", encoderXPos, encoderYPos, instXTarget, instYTarget, xError, yError, xErrorAcc, yErrorAcc, xOutput, yOutput, xDir, yDir);
+                   printMillis+= 200;
+                 }
+                
+                 pwmMotor(motorYDirPin, motorYPwmPin, yDir, yOutput);
+                 pwmMotor(motorXDirPin, motorXPwmPin, xDir, xOutput);
+
+               } while(millis() < (startMillis + 2000));
+   
+               encoderStop();
+               encoderSettle();
+               
+               p("done\n");
+             }
+          break;
+
+
+
           case 'x':  // set x target
 
             pos= 0;
@@ -346,17 +429,17 @@ void encoderStop(void) {
 
 void encoderMoveStep(long encoderXTarget, long encoderYTarget, long dutyCycle) {
     if(encoderYTarget > (encoderYPos+5))
-      pwmMotor(motorYDirPin, motorYPwmPin, LOW, dutyCycle);
+      pwmMotor(motorYDirPin, motorYPwmPin, yDirReverse, dutyCycle);
     else if(encoderYTarget < (encoderYPos-5))
-      pwmMotor(motorYDirPin, motorYPwmPin, HIGH, dutyCycle);
+      pwmMotor(motorYDirPin, motorYPwmPin, yDirForward, dutyCycle);
     else  // ==
       pwmMotor(motorYDirPin, motorYPwmPin, LOW, 0);
 
   
     if(encoderXTarget > (encoderXPos+5))
-      pwmMotor(motorXDirPin, motorXPwmPin, HIGH, dutyCycle);
+      pwmMotor(motorXDirPin, motorXPwmPin, xDirReverse, dutyCycle);
     else if(encoderXTarget < (encoderXPos-5))
-      pwmMotor(motorXDirPin, motorXPwmPin, LOW, dutyCycle);
+      pwmMotor(motorXDirPin, motorXPwmPin, xDirForward, dutyCycle);
     else  // ==
       pwmMotor(motorXDirPin, motorXPwmPin, LOW, 0);
   
