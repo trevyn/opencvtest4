@@ -34,6 +34,8 @@ void p(char *fmt, ... );
 #define xDirReverse HIGH
 #define yDirForward HIGH
 #define yDirReverse LOW
+#define zDirUp HIGH
+#define zDirDown LOW
 
 //#define PIN_B6_HIGH (GPIOB_BASE)->BSRR = BIT(6)
 //#define PIN_B6_LOW  (GPIOB_BASE)->BRR  = BIT(6)
@@ -55,7 +57,9 @@ void setup() {
   pinMode(voltageSensePin, INPUT_ANALOG);
   pinMode(ledPin, OUTPUT);
   
-  
+   pinMode(13, OUTPUT);
+  pinMode(14, INPUT_PULLUP);
+ 
     
   
   // install interrupts on A channels
@@ -113,10 +117,39 @@ long pos= 0;
 uint32 lastMillisOn= 0;
 
 void loop() {
+  long didRun= 0;
 
-
-/*  while(1) {
-  if(analogRead(voltageSensePin) > 240) {
+  while(1) {
+  
+    if(digitalRead(14) == LOW) {  // enable switch
+    
+      didRun= 10000;
+    
+      if(analogRead(20) > 600) {  // voltage present
+        digitalWrite(13, HIGH);     
+        pwmMotor(motorZDirPin, motorZPwmPin, zDirUp, 65535);
+      }
+      else {
+        digitalWrite(13, LOW);     
+        pwmMotor(motorZDirPin, motorZPwmPin, zDirDown, 65535);
+      }
+    }
+    else {
+      digitalWrite(13, LOW);
+       if(didRun) {
+         didRun--;
+          if(didRun == 1) {
+               pwmMotor(motorZDirPin, motorZPwmPin, zDirUp, 65535);
+               delay(3500);
+               didRun= 0;
+          }
+       }
+      
+               
+      pwmMotor(motorZDirPin, motorZPwmPin, zDirDown, 0);
+    }
+  
+/*  if(analogRead(voltageSensePin) > 600) {
     lastMillisOn= millis();
     do {
       pwmMotor(motorZDirPin, motorZPwmPin, HIGH, 10000);
@@ -137,8 +170,9 @@ void loop() {
     driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 1);
 //    delay(1);
     digitalWrite(ledPin, LOW);
-  }
   }*/
+
+  }
   
   
 //  delay(5);
@@ -178,35 +212,35 @@ void loop() {
           
           break;
           case 'q':
-            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 30);
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 65535, 1000);
           break;
           case 'a':
-            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 30);
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 65535, 1000);
           break;
           case 'w':
-            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 5);
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 65535, 200);
           break;
           case 's':
-            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 5);
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 65535, 200);
           break;
           case 'e':
-            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 1);
+            driveMotor(motorZDirPin, motorZPwmPin, HIGH, 65535, 30);
           break;
           case 'd':
-            driveMotor(motorZDirPin, motorZPwmPin, LOW, 10000, 1);
+            driveMotor(motorZDirPin, motorZPwmPin, LOW, 65535, 30);
           break;
 
           case 'i':
-            driveMotor(motorYDirPin, motorYPwmPin, HIGH, 32000, 50);
+            driveMotor(motorYDirPin, motorYPwmPin, HIGH, 65535, 50);
           break;
           case 'k':
-            driveMotor(motorYDirPin, motorYPwmPin, LOW, 32000, 50);
+            driveMotor(motorYDirPin, motorYPwmPin, LOW, 65535, 50);
           break;
           case 'l':
-            driveMotor(motorXDirPin, motorXPwmPin, HIGH, 32000, 50);
+            driveMotor(motorXDirPin, motorXPwmPin, HIGH, 65535, 50);
           break;
           case 'j':
-            driveMotor(motorXDirPin, motorXPwmPin, LOW, 32000, 50);
+            driveMotor(motorXDirPin, motorXPwmPin, LOW, 65535, 50);
           break;
           case 'u':
             driveMotor(motorZDirPin, motorZPwmPin, HIGH, 10000, 50);
@@ -230,9 +264,9 @@ void loop() {
             for(int x= 0; x <= 1000; x++) {
               double pi= 3.14159;
               
-              xFun= sin((2*pi*x)/1000)*2000;
+             xFun= sin((2*pi*x)/1000)*2000;
               yFun= cos((2*pi*x)/1000)*2000-2000;
-              
+               
 //               p("%ld: %ld, %ld (diff: %ld, %ld)\n", x, xStart+xFun, yStart+yFun, xFun, yFun);
                
                encoderMoveTo(xStart+xFun, yStart+yFun);
@@ -258,8 +292,10 @@ void loop() {
           case 'p':  // attempt at PI control!
  
              {
-               long instXTarget, instYTarget, xError, yError, xErrorAcc, yErrorAcc, xOutput, yOutput, xDir, yDir;
+               long instXTarget, instYTarget, xError, yError, xErrorAcc, yErrorAcc, xOutput, yOutput, xDir, yDir, xFun, yFun;
                float pCoeff, iCoeff;
+                           double pi= 3.14159;
+  
 
               xErrorAcc= 0;
               yErrorAcc= 0;
@@ -272,8 +308,11 @@ void loop() {
                
                  // do PI control
                  
-                 instXTarget= 0;
-                 instYTarget= (millis()-startMillis)/5;
+              xFun= sin((2*pi*(millis()-startMillis))/20000)*2000;
+              yFun= cos((2*pi*(millis()-startMillis))/20000)*2000-2000;
+ 
+                 instXTarget= xFun;
+                 instYTarget= yFun; //(millis()-startMillis)/5;
                  
                  xError= instXTarget - encoderXPos;
                  yError= instYTarget - encoderYPos;
@@ -281,8 +320,8 @@ void loop() {
                  xErrorAcc+= xError;
                  yErrorAcc+= yError;
                
-                 pCoeff= 10;
-                 iCoeff= 0.1;
+                 pCoeff= 1000;
+                 iCoeff= 0.0;
                
                  xOutput= (xError*pCoeff)+(xErrorAcc*iCoeff);
                  yOutput= (yError*pCoeff)+(yErrorAcc*iCoeff);
@@ -314,13 +353,13 @@ void loop() {
                  if(millis() > printMillis) {
                   
                    p("p(%ld, %ld) t(%ld,%ld) e(%ld,%ld) a(%ld,%ld) o(%ld,%ld) d(%ld,%ld)\n", encoderXPos, encoderYPos, instXTarget, instYTarget, xError, yError, xErrorAcc, yErrorAcc, xOutput, yOutput, xDir, yDir);
-                   printMillis+= 200;
+                   printMillis+= 50;
                  }
                 
                  pwmMotor(motorYDirPin, motorYPwmPin, yDir, yOutput);
                  pwmMotor(motorXDirPin, motorXPwmPin, xDir, xOutput);
 
-               } while(millis() < (startMillis + 2000));
+               } while(millis() < (startMillis + 20000));
    
                encoderStop();
                encoderSettle();
